@@ -1,0 +1,22 @@
+[gd_scene load_steps=5 format=3 uid="uid://cg6gxxmwtunye"]
+
+[ext_resource type="PackedScene" uid="uid://btn4xqxrhgbkk" path="res://main/fractal/fractal.tscn" id="1_wh10r"]
+[ext_resource type="Shader" path="res://main/palette/palette.gdshader" id="2_w464c"]
+[ext_resource type="Texture2D" uid="uid://c8t5lmn51bdp8" path="res://main/palette/slso8-1x.png" id="3_c1rxx"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_t8wsp"]
+shader = ExtResource("2_w464c")
+shader_parameter/palette_size = 8
+shader_parameter/palette = ExtResource("3_c1rxx")
+
+[node name="Main" type="Node"]
+
+[node name="Fractal" parent="." instance=ExtResource("1_wh10r")]
+
+[node name="ColorRect" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_t8wsp")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2

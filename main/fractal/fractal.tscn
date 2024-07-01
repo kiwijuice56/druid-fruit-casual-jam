@@ -1,0 +1,80 @@
+[gd_scene load_steps=7 format=3 uid="uid://btn4xqxrhgbkk"]
+
+[ext_resource type="Shader" path="res://main/fractal/mandelbulb.gdshader" id="1_tkiqw"]
+[ext_resource type="Script" path="res://main/fractal/fractal.gd" id="2_f5tb6"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_k1wbo"]
+shader = ExtResource("1_tkiqw")
+shader_parameter/max_iter = 128
+shader_parameter/max_bounce = 1
+shader_parameter/light_iter = 64
+shader_parameter/collision_threshold = 0.001
+shader_parameter/normal_sample_length = 0.001
+shader_parameter/bulb_iter = 8
+shader_parameter/bulb_power = 6.0
+shader_parameter/bulb_runaway_threshold = 2.0
+shader_parameter/fractal_color1 = Color(0, 0, 0, 1)
+shader_parameter/fractal_color2 = Color(1, 1, 1, 1)
+shader_parameter/color_center_point = Vector3(0, 0.5, -0.5)
+shader_parameter/color_intensity = 0.5
+shader_parameter/fov = 86.0
+shader_parameter/runaway_threshold = 8.0
+shader_parameter/light_ray = Vector3(0.405, -1.57, -1.165)
+shader_parameter/_cam_pos = Vector3(0, 0, 1.60557)
+shader_parameter/_cam_mat = Basis(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1)
+shader_parameter/_screen_size = Vector2(340, 256)
+
+[sub_resource type="Animation" id="Animation_51qkl"]
+resource_name = "idle"
+loop_mode = 1
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:material:shader_parameter/bulb_power")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(6, -0.25, 0, 0.25, 0, 12, -0.25, 0, 0.25, 0, 6, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 0.5, 1)
+}
+
+[sub_resource type="Animation" id="Animation_p5r8u"]
+length = 0.001
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:material:shader_parameter/bulb_power")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(6, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_oobx3"]
+_data = {
+"RESET": SubResource("Animation_p5r8u"),
+"idle": SubResource("Animation_51qkl")
+}
+
+[node name="Fractal" type="ColorRect" node_paths=PackedStringArray("camera")]
+material = SubResource("ShaderMaterial_k1wbo")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_f5tb6")
+camera = NodePath("Camera3D")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 1.60557)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_oobx3")
+}
+autoplay = "idle"
+speed_scale = 0.1
