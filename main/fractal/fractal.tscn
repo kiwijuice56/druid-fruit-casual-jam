@@ -20,8 +20,8 @@ shader_parameter/color_intensity = 0.5
 shader_parameter/fov = 86.0
 shader_parameter/runaway_threshold = 8.0
 shader_parameter/light_ray = Vector3(0.405, -1.57, -1.165)
-shader_parameter/_cam_pos = Vector3(0, 0, 1.60557)
-shader_parameter/_cam_mat = Basis(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1)
+shader_parameter/_cam_pos = Vector3(0, -0.08, 1.731)
+shader_parameter/_cam_mat = Basis(1, 0, 0, 0, 1, 0, 0, 0, 1)
 shader_parameter/_screen_size = Vector2(340, 256)
 
 [sub_resource type="Animation" id="Animation_p5r8u"]
@@ -70,7 +70,7 @@ script = ExtResource("2_f5tb6")
 camera = NodePath("Camera3D")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 1.60557)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.08, 1.731)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {

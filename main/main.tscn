@@ -1,82 +1,13 @@
-[gd_scene load_steps=12 format=3 uid="uid://cg6gxxmwtunye"]
+[gd_scene load_steps=9 format=3 uid="uid://cg6gxxmwtunye"]
 
+[ext_resource type="AudioStream" uid="uid://bg1d42es5pkhd" path="res://main/music/fractal_music.ogg" id="1_r2h3c"]
 [ext_resource type="PackedScene" uid="uid://btn4xqxrhgbkk" path="res://main/fractal/fractal.tscn" id="1_wh10r"]
 [ext_resource type="Shader" path="res://main/palette/palette.gdshader" id="2_w464c"]
 [ext_resource type="Texture2D" uid="uid://c8t5lmn51bdp8" path="res://main/palette/slso8-1x.png" id="3_c1rxx"]
-[ext_resource type="Texture2D" uid="uid://flt0rqgle5h2" path="res://main/player/head.png" id="3_kiry0"]
-[ext_resource type="Texture2D" uid="uid://cqj2dgpticeks" path="res://main/player/player.png" id="4_201fh"]
-[ext_resource type="Script" path="res://main/player/player.gd" id="4_otonj"]
+[ext_resource type="Theme" uid="uid://lf8o2b8bvcgo" path="res://main/ui/theme.tres" id="4_h538u"]
+[ext_resource type="PackedScene" uid="uid://bujtvxtfgewh6" path="res://main/player/player.tscn" id="6_oshvt"]
 
 [sub_resource type="Environment" id="Environment_gykwg"]
-
-[sub_resource type="Animation" id="Animation_34l4d"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [0]
-}
-tracks/1/type = "bezier"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".:scale:x")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(0.3, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0)
-}
-tracks/2/type = "bezier"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath(".:scale:y")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(0.3, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0)
-}
-
-[sub_resource type="Animation" id="Animation_qtpnf"]
-resource_name = "squish"
-loop_mode = 1
-tracks/0/type = "bezier"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:scale:x")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"handle_modes": PackedInt32Array(0, 0, 0),
-"points": PackedFloat32Array(0.3, -0.25, 0, 0.25, 0, 0.27, -0.25, 0, 0.25, 0, 0.3, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0, 0.5, 1)
-}
-tracks/1/type = "bezier"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".:scale:y")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"handle_modes": PackedInt32Array(0, 0, 0),
-"points": PackedFloat32Array(0.3, -0.25, 0, 0.25, 0, 0.27, -0.25, 0, 0.25, 0, 0.3, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0, 0.6, 1)
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_qmc2x"]
-_data = {
-"RESET": SubResource("Animation_34l4d"),
-"squish": SubResource("Animation_qtpnf")
-}
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_t8wsp"]
 shader = ExtResource("2_w464c")
@@ -85,40 +16,53 @@ shader_parameter/palette = ExtResource("3_c1rxx")
 
 [node name="Main" type="Node"]
 
-[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
-offset_right = 40.0
-offset_bottom = 40.0
+[node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("1_r2h3c")
+autoplay = true
 
-[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+[node name="FractalLayer" type="CanvasLayer" parent="."]
+layer = 0
+
+[node name="FractalContainer" type="SubViewportContainer" parent="FractalLayer"]
+offset_right = 340.0
+offset_bottom = 256.0
+
+[node name="SubViewport" type="SubViewport" parent="FractalLayer/FractalContainer"]
 handle_input_locally = false
 size = Vector2i(340, 256)
 render_target_update_mode = 4
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="SubViewportContainer/SubViewport"]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="FractalLayer/FractalContainer/SubViewport"]
 environment = SubResource("Environment_gykwg")
 
-[node name="Fractal" parent="SubViewportContainer/SubViewport" instance=ExtResource("1_wh10r")]
+[node name="Fractal" parent="FractalLayer/FractalContainer/SubViewport" instance=ExtResource("1_wh10r")]
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-visible = false
-position = Vector2(171, 192)
-texture = ExtResource("4_201fh")
+[node name="Worldlayer" type="CanvasLayer" parent="."]
 
-[node name="Player" type="Sprite2D" parent="."]
-position = Vector2(313, 229)
-scale = Vector2(0.3, 0.3)
-texture = ExtResource("3_kiry0")
-hframes = 8
-script = ExtResource("4_otonj")
+[node name="World" type="Node2D" parent="Worldlayer"]
+position = Vector2(77, 24)
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Player"]
-libraries = {
-"": SubResource("AnimationLibrary_qmc2x")
-}
-autoplay = "squish"
-speed_scale = 0.75
+[node name="Player" parent="Worldlayer/World" instance=ExtResource("6_oshvt")]
+position = Vector2(-135, -2)
 
-[node name="PaletteLimiter" type="ColorRect" parent="."]
+[node name="UILayer" type="CanvasLayer" parent="."]
+
+[node name="RichTextLabel" type="RichTextLabel" parent="UILayer"]
+custom_minimum_size = Vector2(0, 48)
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+theme = ExtResource("4_h538u")
+bbcode_enabled = true
+text = "[center][shake]MAN SHALL NOT SEE ME AND LIVE"
+
+[node name="PaletteLayer" type="CanvasLayer" parent="."]
+layer = 2
+
+[node name="PaletteLimiter" type="ColorRect" parent="PaletteLayer"]
 material = SubResource("ShaderMaterial_t8wsp")
 anchors_preset = 15
 anchor_right = 1.0

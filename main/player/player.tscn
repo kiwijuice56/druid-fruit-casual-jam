@@ -1,0 +1,96 @@
+[gd_scene load_steps=7 format=3 uid="uid://bujtvxtfgewh6"]
+
+[ext_resource type="Script" path="res://main/player/player.gd" id="1_naety"]
+[ext_resource type="Texture2D" uid="uid://flt0rqgle5h2" path="res://main/player/head.png" id="2_olktr"]
+
+[sub_resource type="Animation" id="Animation_34l4d"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:scale:x")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0.3, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".:scale:y")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0.3, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+
+[sub_resource type="Animation" id="Animation_qtpnf"]
+resource_name = "squish"
+loop_mode = 1
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:scale:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(0.3, -0.25, 0, 0.25, 0, 0.27, -0.25, 0, 0.25, 0, 0.3, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 0.5, 1)
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:scale:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(0.3, -0.25, 0, 0.25, 0, 0.27, -0.25, 0, 0.25, 0, 0.3, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 0.6, 1)
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_qmc2x"]
+_data = {
+"RESET": SubResource("Animation_34l4d"),
+"squish": SubResource("Animation_qtpnf")
+}
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_yu747"]
+
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("sprite")]
+collision_layer = 2
+script = ExtResource("1_naety")
+sprite = NodePath("Sprite2D")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+root_node = NodePath("../Sprite2D")
+libraries = {
+"": SubResource("AnimationLibrary_qmc2x")
+}
+autoplay = "squish"
+speed_scale = 0.75
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("2_olktr")
+hframes = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_yu747")
