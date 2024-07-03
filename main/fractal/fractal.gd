@@ -1,9 +1,13 @@
-@tool
-class_name Fractal extends ColorRect
+class_name Fractal extends SubViewportContainer
 
-@export var camera: Camera3D 
+@export var fractal_material: ShaderMaterial
+@export var fractal_canvas: FractalNavigation
+@export var fractal_anim: AnimationPlayer
 
-func _process(_delta) -> void:
-	material.set_shader_parameter("_cam_pos", camera.global_position)
-	material.set_shader_parameter("_cam_mat", camera.global_transform.basis)
-	material.set_shader_parameter("_screen_size", size)
+func _ready() -> void:
+	make_fractal_unique.call_deferred()
+
+func make_fractal_unique() -> void:
+	fractal_canvas.material = fractal_material.duplicate()
+	fractal_canvas.material.set_shader_parameter("rotation_speed", randf_range(1.0, 9.0))
+	fractal_anim.play("idle")

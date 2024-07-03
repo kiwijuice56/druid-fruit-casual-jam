@@ -21,10 +21,15 @@ window/size/viewport_width=340
 window/size/viewport_height=256
 window/stretch/mode="viewport"
 
+[gui]
+
+common/snap_controls_to_pixels=false
+
 [layer_names]
 
 2d_physics/layer_1="map"
 2d_physics/layer_2="player"
+2d_physics/layer_3="fruit"
 
 [rendering]
 

@@ -17,6 +17,7 @@ uniform vec3 fractal_color1: source_color;
 uniform vec3 fractal_color2: source_color;
 uniform vec3 color_center_point = vec3(0.0, 0.5, -0.5);
 uniform float color_intensity = 0.5;
+uniform float rotation_speed = 1.0;
 
 group_uniforms camera;
 uniform float fov = 95.0; // In degrees
@@ -42,7 +43,7 @@ struct Material {
 
 void rotate(inout vec3 p) {
 	vec3 pt = p;
-	float t = TIME / 8.0;
+	float t = rotation_speed * TIME / 8.0;
 	p.y = cos(t) * p.y + sin(t) * p.z;
 	p.z = -sin(t) * pt.y + cos(t) * pt.z;
 	
@@ -202,7 +203,7 @@ void fragment() {
 		
 		// Specular highlights
 		float specular = dot(-normalize(light_ray), ray_dir);
-		float specular_power = pow(25.0 * (surface_material.roughness - 1.0), 2.0) + 2.0;
+		float specular_power = 8.0;
 		hit_color += vec3(surface_material.specular_alpha) * pow(specular, specular_power);
 		
 		// Ray-traced shadows
@@ -216,5 +217,6 @@ void fragment() {
 		// Mix reflections
 		pixel_color = mix(pixel_color, hit_color, surface_material.reflectivity);
 	}
+	pixel_color = clamp(pixel_color, 0.0, 1.0);
 	COLOR.rgb = pixel_color;
 }
