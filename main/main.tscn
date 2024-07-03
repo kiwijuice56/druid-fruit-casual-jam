@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://cg6gxxmwtunye"]
+[gd_scene load_steps=10 format=3 uid="uid://cg6gxxmwtunye"]
 
 [ext_resource type="AudioStream" uid="uid://bg1d42es5pkhd" path="res://main/music/fractal_music.ogg" id="1_r2h3c"]
 [ext_resource type="PackedScene" uid="uid://cp2p4qglkd0yh" path="res://main/fractal/fractal.tscn" id="1_wh10r"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://c8t5lmn51bdp8" path="res://main/palette/slso8-1x.png" id="3_c1rxx"]
 [ext_resource type="Script" path="res://main/world/world.gd" id="3_pme3a"]
 [ext_resource type="Theme" uid="uid://lf8o2b8bvcgo" path="res://main/ui/theme.tres" id="4_h538u"]
+[ext_resource type="TileSet" uid="uid://4cpb75gtlnd1" path="res://main/world/tileset/basic_tileset.tres" id="5_g5swk"]
 [ext_resource type="PackedScene" uid="uid://bujtvxtfgewh6" path="res://main/player/player.tscn" id="6_oshvt"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_t8wsp"]
@@ -33,18 +34,24 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Worldlayer" type="CanvasLayer" parent="."]
+follow_viewport_enabled = true
 
 [node name="World" type="Node2D" parent="Worldlayer"]
-position = Vector2(77, 24)
 script = ExtResource("3_pme3a")
+
+[node name="TileMap" type="TileMap" parent="Worldlayer/World"]
+z_index = -2
+tile_set = ExtResource("5_g5swk")
+format = 2
+layer_0/tile_data = PackedInt32Array(-1, 0, 0, 65535, 65536, 0, 0, 65536, 0, -65536, 65536, 0, 131071, 0, 0, 196607, 65536, 0, 262143, 65536, 0, 196608, 65536, 0, 131072, 0, 0, 65536, 65536, 0, 196609, 65536, 0, 131073, 65536, 0, 65537, 65536, 0, 1, 0, 0, -65535, 0, 0, 2, 0, 0, 65538, 65536, 0, 131074, 65536, 0, 196610, 65536, 0, 262145, 65536, 0, 262144, 0, 0, 327679, 0, 0, 262146, 0, 0, 262147, 0, 0, 262148, 0, 0, 196612, 0, 0, 196611, 65536, 0, 131075, 0, 0, 131076, 65536, 0, 196613, 0, 0, 262149, 65536, 0, 131077, 0, 0, 65541, 0, 0, 65540, 0, 0, 65539, 0, 0, 3, 0, 0, -65534, 0, 0, -65533, 65536, 0, -65532, 0, 0, 4, 0, 0, 5, 65536, 0, -65531, 65536, 0, -65538, 0, 0, -2, 65536, 0, 65534, 0, 0, 131070, 65536, 0, 196606, 0, 0, 196605, 0, 0, 262141, 65536, 0, 327677, 65536, 0, 327678, 65536, 0, 262142, 0, 0, 131069, 0, 0, 65533, 0, 0, -3, 65536, 0, -65539, 0, 0, -65537, 0, 0, -131072, 65536, 0, -131071, 0, 0, -131070, 65536, 0, -131069, 65536, 0, -131068, 0, 0, -131067, 0, 0, -131066, 0, 0, -65530, 0, 0, 6, 0, 0, 65542, 65536, 0, 131078, 65536, 0, 196614, 65536, 0, 262150, 65536, 0, 327686, 0, 0, 327685, 65536, 0, 327684, 0, 0, 327683, 0, 0, 327682, 0, 0, 327681, 0, 0, 327680, 0, 0, 393215, 0, 0, 393214, 0, 0, 393213, 0, 0, 393212, 65536, 0, 327676, 0, 0, 262140, 0, 0, 196604, 65536, 0, 131068, 0, 0, 65532, 0, 0, -4, 65536, 0, -65540, 65536, 0, -65541, 65536, 0, -5, 65536, 0, 65531, 0, 0, 131067, 0, 0, 196603, 0, 0, 262139, 0, 0, 327675, 65536, 0, 393211, 0, 0, 393210, 0, 0, 327674, 65536, 0, 262138, 0, 0, 196602, 65536, 0, 131066, 0, 0, 65530, 65536, 0, -6, 65536, 0, -65542, 0, 0, -131078, 0, 0, -131077, 0, 0, -131076, 65536, 0, -131075, 0, 0, -131074, 0, 0, -131073, 65536, 0, -196608, 65536, 0, -196607, 0, 0, -196606, 0, 0, -196605, 65536, 0, -196604, 65536, 0, -262139, 65536, 0, -196603, 65536, 0, -196602, 0, 0, -262140, 65536, 0, -262141, 0, 0, -262142, 0, 0, -262143, 0, 0, -262144, 65536, 0, -196609, 0, 0, -196610, 65536, 0, -196611, 65536, 0, -196612, 0, 0, -196613, 65536, 0, -196614, 65536, 0, -262138, 0, 0)
 
 [node name="Player" parent="Worldlayer/World" instance=ExtResource("6_oshvt")]
 position = Vector2(-135, -2)
 
 [node name="UILayer" type="CanvasLayer" parent="."]
-visible = false
 
 [node name="RichTextLabel" type="RichTextLabel" parent="UILayer"]
+visible = false
 custom_minimum_size = Vector2(0, 48)
 anchors_preset = 12
 anchor_top = 1.0
