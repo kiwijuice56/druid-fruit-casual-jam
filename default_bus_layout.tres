@@ -1,0 +1,20 @@
+[gd_resource type="AudioBusLayout" load_steps=3 format=3 uid="uid://dowkdvbqb342r"]
+
+[sub_resource type="AudioEffectReverb" id="AudioEffectReverb_sopb5"]
+resource_name = "Reverb"
+room_size = 0.15
+
+[sub_resource type="AudioEffectLowPassFilter" id="AudioEffectLowPassFilter_104w7"]
+resource_name = "LowPassFilter"
+
+[resource]
+bus/1/name = &"Sfx"
+bus/1/solo = false
+bus/1/mute = false
+bus/1/bypass_fx = false
+bus/1/volume_db = 0.0
+bus/1/send = &"Master"
+bus/1/effect/0/effect = SubResource("AudioEffectReverb_sopb5")
+bus/1/effect/0/enabled = false
+bus/1/effect/1/effect = SubResource("AudioEffectLowPassFilter_104w7")
+bus/1/effect/1/enabled = true

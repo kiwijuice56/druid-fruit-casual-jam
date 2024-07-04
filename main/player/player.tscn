@@ -1,8 +1,23 @@
-[gd_scene load_steps=8 format=3 uid="uid://bujtvxtfgewh6"]
+[gd_scene load_steps=20 format=3 uid="uid://bujtvxtfgewh6"]
 
 [ext_resource type="Script" path="res://main/player/player.gd" id="1_naety"]
 [ext_resource type="PackedScene" uid="uid://b84ceqsyuo4b0" path="res://main/asset/shadow/shadow.tscn" id="2_ii7b7"]
 [ext_resource type="Texture2D" uid="uid://flt0rqgle5h2" path="res://main/player/head.png" id="2_olktr"]
+[ext_resource type="AudioStream" uid="uid://baiq80vye838" path="res://main/player/sand1.ogg" id="2_whqfy"]
+[ext_resource type="Texture2D" uid="uid://bqtkb24lv5nr2" path="res://main/player/cloak.png" id="3_13ton"]
+[ext_resource type="AudioStream" uid="uid://dniu3n3ude1xr" path="res://main/player/sand2.ogg" id="3_twq88"]
+[ext_resource type="Texture2D" uid="uid://b26vlwy6w1ni7" path="res://main/asset/circle.png" id="3_xgppo"]
+[ext_resource type="AudioStream" uid="uid://c8xvm1opcc6wt" path="res://main/player/sand3.ogg" id="4_dt7am"]
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_kyrkl"]
+random_pitch = 1.3
+streams_count = 3
+stream_0/stream = ExtResource("2_whqfy")
+stream_0/weight = 1.0
+stream_1/stream = ExtResource("3_twq88")
+stream_1/weight = 1.0
+stream_2/stream = ExtResource("4_dt7am")
+stream_2/weight = 1.0
 
 [sub_resource type="Animation" id="Animation_34l4d"]
 length = 0.001
@@ -40,6 +55,17 @@ tracks/2/keys = {
 "points": PackedFloat32Array(0.3, -0.25, 0, 0.25, 0),
 "times": PackedFloat32Array(0)
 }
+tracks/3/type = "bezier"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("../Torso:scale:x")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0.15, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
 
 [sub_resource type="Animation" id="Animation_qtpnf"]
 resource_name = "squish"
@@ -66,6 +92,17 @@ tracks/1/keys = {
 "points": PackedFloat32Array(0.3, -0.25, 0, 0.25, 0, 0.27, -0.25, 0, 0.25, 0, 0.3, -0.25, 0, 0.25, 0),
 "times": PackedFloat32Array(0, 0.6, 1)
 }
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("../Torso:scale:x")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(0.15, -0.25, 0, 0.25, 0, 0.17, -0.25, 0, 0.25, 0, 0.15, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 0.6, 1)
+}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_qmc2x"]
 _data = {
@@ -73,32 +110,158 @@ _data = {
 "squish": SubResource("Animation_qtpnf")
 }
 
+[sub_resource type="Animation" id="Animation_nayda"]
+resource_name = "walk"
+loop_mode = 1
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Head:position:y")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0, -2, -0.25, 0, 0.25, 0, 0, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 0.4, 1)
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Torso:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(23, -0.25, 0, 0.25, 0, 22, -0.25, 0, 0.25, 0, 23, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 0.3, 0.8)
+}
+tracks/2/type = "method"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0.1),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"step"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_ffq8b"]
+length = 0.001
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Head:position:y")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Torso:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(23, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+
+[sub_resource type="Animation" id="Animation_8bq0x"]
+resource_name = "idle"
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_4h400"]
+_data = {
+"RESET": SubResource("Animation_ffq8b"),
+"idle": SubResource("Animation_8bq0x"),
+"walk": SubResource("Animation_nayda")
+}
+
+[sub_resource type="Curve" id="Curve_rtmgt"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.0835322, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Gradient" id="Gradient_ox2xn"]
+offsets = PackedFloat32Array(0, 0.782369)
+colors = PackedColorArray(0.661081, 0.661081, 0.661081, 1, 0, 0, 0, 1)
+
 [sub_resource type="CircleShape2D" id="CircleShape2D_yu747"]
 
-[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("sprite")]
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("sprite", "walk_anim", "step_particles", "step_player")]
 collision_layer = 2
 script = ExtResource("1_naety")
-sprite = NodePath("Sprite2D")
+sprite = NodePath("Head")
+walk_anim = NodePath("WalkAnimationPlayer")
+step_particles = NodePath("StepParticles")
+step_player = NodePath("StepPlayer")
 speed = 98.0
 
+[node name="StepPlayer" type="AudioStreamPlayer" parent="."]
+stream = SubResource("AudioStreamRandomizer_kyrkl")
+volume_db = -16.0
+bus = &"Sfx"
+
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-root_node = NodePath("../Sprite2D")
+root_node = NodePath("../Head")
 libraries = {
 "": SubResource("AnimationLibrary_qmc2x")
 }
 autoplay = "squish"
 speed_scale = 0.3
 
-[node name="Shadow" parent="." instance=ExtResource("2_ii7b7")]
-position = Vector2(0, 13)
-scale = Vector2(0.1, 0.12)
+[node name="WalkAnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_4h400")
+}
+speed_scale = 4.6
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="StepParticles" type="CPUParticles2D" parent="."]
+z_index = -1
+position = Vector2(0, 28)
+scale = Vector2(1, 1)
+emitting = false
+lifetime = 0.3
+one_shot = true
+explosiveness = 0.88
+texture = ExtResource("3_xgppo")
+emission_shape = 1
+emission_sphere_radius = 8.0
+direction = Vector2(0, -1)
+spread = 58.0
+gravity = Vector2(0, 256)
+initial_velocity_min = 101.38
+initial_velocity_max = 101.38
+scale_amount_min = 0.02
+scale_amount_max = 0.05
+scale_amount_curve = SubResource("Curve_rtmgt")
+color_ramp = SubResource("Gradient_ox2xn")
+
+[node name="Shadow" parent="." instance=ExtResource("2_ii7b7")]
+position = Vector2(-0.5, 31)
+scale = Vector2(0.09, 0.09)
+
+[node name="Torso" type="Sprite2D" parent="."]
+position = Vector2(0, 23)
+scale = Vector2(0.15, 0.08)
+texture = ExtResource("3_13ton")
+offset = Vector2(0, -18)
+
+[node name="Head" type="Sprite2D" parent="."]
 scale = Vector2(0.3, 0.3)
 texture = ExtResource("2_olktr")
+offset = Vector2(0, -6)
 hframes = 8
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_yu747")
 
 [node name="Camera2D" type="Camera2D" parent="."]
+offset = Vector2(0, 8)
