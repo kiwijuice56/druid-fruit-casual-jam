@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://cg6gxxmwtunye"]
+[gd_scene load_steps=12 format=3 uid="uid://cg6gxxmwtunye"]
 
 [ext_resource type="AudioStream" uid="uid://bg1d42es5pkhd" path="res://main/music/fractal_music.ogg" id="1_r2h3c"]
 [ext_resource type="PackedScene" uid="uid://cp2p4qglkd0yh" path="res://main/fractal/fractal.tscn" id="1_wh10r"]
@@ -9,6 +9,7 @@
 [ext_resource type="TileSet" uid="uid://4cpb75gtlnd1" path="res://main/world/tileset/basic_tileset.tres" id="5_g5swk"]
 [ext_resource type="PackedScene" uid="uid://yiinihgthmfb" path="res://main/fruit/fruit.tscn" id="5_yhnb7"]
 [ext_resource type="PackedScene" uid="uid://bujtvxtfgewh6" path="res://main/player/player.tscn" id="6_oshvt"]
+[ext_resource type="Texture2D" uid="uid://cdpak2epy427w" path="res://main/ui/seed_icon.png" id="8_chbmg"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_t8wsp"]
 shader = ExtResource("2_w464c")
@@ -66,6 +67,21 @@ grow_vertical = 0
 theme = ExtResource("4_h538u")
 bbcode_enabled = true
 text = "[center][shake]MAN SHALL NOT SEE ME AND LIVE"
+
+[node name="TextureRect" type="TextureRect" parent="UILayer"]
+offset_left = 23.0
+offset_top = 202.0
+offset_right = 196.0
+offset_bottom = 372.0
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("8_chbmg")
+
+[node name="Label" type="Label" parent="UILayer"]
+offset_left = 57.0
+offset_top = 208.0
+offset_right = 89.0
+offset_bottom = 231.0
+text = "x 23"
 
 [node name="PaletteLayer" type="CanvasLayer" parent="."]
 layer = 2

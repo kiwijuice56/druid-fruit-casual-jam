@@ -4,6 +4,11 @@ class_name Fractal extends SubViewportContainer
 @export var fractal_canvas: FractalNavigation
 @export var fractal_anim: AnimationPlayer
 
+@export var bulb_power: float:
+	set(val):
+		bulb_power = val
+		fractal_canvas.material.set_shader_parameter("bulb_power", bulb_power)
+
 func _ready() -> void:
 	make_fractal_unique.call_deferred()
 
