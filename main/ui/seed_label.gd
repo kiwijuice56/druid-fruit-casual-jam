@@ -5,5 +5,5 @@ func _ready() -> void:
 	_on_data_changed()
 
 func _on_data_changed() -> void:
-	text = "x %d" % Data.seeds
+	text = "x%d" % Data.seeds
 

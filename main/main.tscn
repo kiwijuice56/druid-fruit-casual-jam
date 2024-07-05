@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://cg6gxxmwtunye"]
+[gd_scene load_steps=15 format=3 uid="uid://cg6gxxmwtunye"]
 
 [ext_resource type="AudioStream" uid="uid://bg1d42es5pkhd" path="res://main/music/fractal_music.ogg" id="1_r2h3c"]
 [ext_resource type="PackedScene" uid="uid://cp2p4qglkd0yh" path="res://main/fractal/fractal.tscn" id="1_wh10r"]
@@ -7,10 +7,17 @@
 [ext_resource type="Script" path="res://main/world/world.gd" id="3_pme3a"]
 [ext_resource type="Theme" uid="uid://lf8o2b8bvcgo" path="res://main/ui/theme.tres" id="4_h538u"]
 [ext_resource type="TileSet" uid="uid://4cpb75gtlnd1" path="res://main/world/tileset/basic_tileset.tres" id="5_g5swk"]
+[ext_resource type="Shader" path="res://main/ui/vignette.gdshader" id="5_ippqp"]
 [ext_resource type="PackedScene" uid="uid://bujtvxtfgewh6" path="res://main/player/player.tscn" id="6_oshvt"]
 [ext_resource type="Script" path="res://main/ui/interact_label.gd" id="8_1lx0r"]
 [ext_resource type="Texture2D" uid="uid://cdpak2epy427w" path="res://main/ui/seed_icon.png" id="8_chbmg"]
 [ext_resource type="Script" path="res://main/ui/seed_label.gd" id="8_y18kr"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_btgvu"]
+shader = ExtResource("5_ippqp")
+shader_parameter/vignette_intensity = 0.3
+shader_parameter/vignette_opacity = 0.5
+shader_parameter/vignette_rgb = Color(0, 0, 0, 1)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_t8wsp"]
 shader = ExtResource("2_w464c")
@@ -42,6 +49,14 @@ position = Vector2(-124, 57)
 
 [node name="UILayer" type="CanvasLayer" parent="."]
 
+[node name="ColorRect" type="ColorRect" parent="UILayer"]
+material = SubResource("ShaderMaterial_btgvu")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
 [node name="RichTextLabel" type="RichTextLabel" parent="UILayer"]
 visible = false
 custom_minimum_size = Vector2(0, 48)
@@ -57,18 +72,20 @@ text = "[center][shake]MAN SHALL NOT SEE ME AND LIVE"
 
 [node name="TextureRect" type="TextureRect" parent="UILayer"]
 offset_left = 23.0
-offset_top = 202.0
-offset_right = 196.0
-offset_bottom = 372.0
+offset_top = 198.0
+offset_right = 255.0
+offset_bottom = 398.0
 scale = Vector2(0.2, 0.2)
 texture = ExtResource("8_chbmg")
 
 [node name="SeedLabel" type="Label" parent="UILayer"]
-offset_left = 57.0
-offset_top = 208.0
-offset_right = 89.0
-offset_bottom = 231.0
-text = "x 23"
+offset_left = 61.0
+offset_top = 207.0
+offset_right = 104.0
+offset_bottom = 233.0
+theme = ExtResource("4_h538u")
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "x23"
 script = ExtResource("8_y18kr")
 
 [node name="InteractLabel" type="Label" parent="UILayer"]
@@ -77,7 +94,9 @@ offset_left = 123.0
 offset_top = 186.0
 offset_right = 223.0
 offset_bottom = 209.0
-text = "a"
+theme = ExtResource("4_h538u")
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "123456"
 horizontal_alignment = 1
 script = ExtResource("8_1lx0r")
 
