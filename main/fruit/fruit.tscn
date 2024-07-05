@@ -1,6 +1,7 @@
-[gd_scene load_steps=12 format=3 uid="uid://yiinihgthmfb"]
+[gd_scene load_steps=14 format=3 uid="uid://yiinihgthmfb"]
 
 [ext_resource type="PackedScene" uid="uid://b84ceqsyuo4b0" path="res://main/asset/shadow/shadow.tscn" id="1_lbeaw"]
+[ext_resource type="Script" path="res://main/fruit/fruit.gd" id="1_nhot4"]
 [ext_resource type="PackedScene" uid="uid://c5e4iunc8y22q" path="res://main/fractal/baby_fractal/baby_fractal.tscn" id="1_yh4b0"]
 [ext_resource type="Texture2D" uid="uid://c5uadakhjlplf" path="res://main/fruit/stem.png" id="3_4v7k8"]
 [ext_resource type="Texture2D" uid="uid://dsoiju4qv1htl" path="res://main/fruit/mound.png" id="3_7i2si"]
@@ -88,7 +89,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 1,
-"values": [Vector2(-25, -28), Vector2(-24, -31), Vector2(-22, -38.04), Vector2(-14.19, -35.945), Vector2(-14.515, -38.875), Vector2(-14.0901, -44.4121), Vector2(1.05949, -38.8315), Vector2(1.09561, -41.9694), Vector2(1.09561, -41.9694)]
+"values": [Vector2(-25, -28), Vector2(-24, -32.245), Vector2(-21.3, -35.975), Vector2(-14.19, -35.945), Vector2(-14.515, -38.875), Vector2(-14.0901, -44.4121), Vector2(1.05949, -38.8315), Vector2(1.09561, -41.9694), Vector2(1.09561, -41.9694)]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
@@ -100,7 +101,7 @@ tracks/2/keys = {
 "times": PackedFloat32Array(0, 0.7, 0.8),
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(1, 1), Vector2(1, 1)]
+"values": [Vector2(0, 0), Vector2(0.8, 0.8), Vector2(0.8, 0.8)]
 }
 tracks/3/type = "value"
 tracks/3/imported = false
@@ -221,11 +222,15 @@ _data = {
 }
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_6pegn"]
-radius = 16.0
+radius = 32.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_4ru0q"]
+radius = 12.0
 
 [node name="Fruit" type="Area2D"]
 collision_layer = 4
 collision_mask = 0
+script = ExtResource("1_nhot4")
 metadata/_edit_vertical_guides_ = [-97.0]
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
@@ -281,3 +286,10 @@ offset_right = 25.0
 offset_bottom = 25.0
 scale = Vector2(0.1, 0.1)
 pivot_offset = Vector2(23, 23)
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+collision_layer = 4
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+shape = SubResource("CircleShape2D_4ru0q")

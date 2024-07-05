@@ -1,14 +1,28 @@
 class_name Player extends CharacterBody2D
 
+@export var plant_radius: float = 32.0
 @export var sprite: Sprite2D
+@export var plant_ray_cast: RayCast2D
 @export var walk_anim: AnimationPlayer
 @export var step_particles: CPUParticles2D
 @export var step_player: AudioStreamPlayer
+@export var fruit_scene: PackedScene
 
 @export var speed: float = 64.0
 
+var last_dir: Vector2 = Vector2(0, 1)
+
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("plant", false):
+		if Data.seeds <= 0:
+			return
+		plant()
+
 func _physics_process(delta: float) -> void:
 	var input: Vector2 = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
+	
+	if input.length() > 0:
+		last_dir = input
 	
 	velocity = input * speed
 	
@@ -45,3 +59,18 @@ func animate(input: Vector2) -> void:
 		walk_anim.play("idle")
 	else:
 		walk_anim.play("walk") 
+
+func plant() -> void:
+	var plant_position = last_dir * plant_radius
+	plant_ray_cast.target_position = plant_position
+	plant_ray_cast.force_raycast_update()
+	
+	if plant_ray_cast.is_colliding():
+		return
+	
+	Data.seeds -= 1
+	
+	var new_fruit: Fruit = fruit_scene.instantiate()
+	get_parent().add_child(new_fruit)
+	new_fruit.global_position = global_position + plant_position
+	

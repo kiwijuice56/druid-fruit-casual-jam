@@ -1,6 +1,7 @@
-[gd_scene load_steps=20 format=3 uid="uid://bujtvxtfgewh6"]
+[gd_scene load_steps=21 format=3 uid="uid://bujtvxtfgewh6"]
 
 [ext_resource type="Script" path="res://main/player/player.gd" id="1_naety"]
+[ext_resource type="PackedScene" uid="uid://yiinihgthmfb" path="res://main/fruit/fruit.tscn" id="2_bppp1"]
 [ext_resource type="PackedScene" uid="uid://b84ceqsyuo4b0" path="res://main/asset/shadow/shadow.tscn" id="2_ii7b7"]
 [ext_resource type="Texture2D" uid="uid://flt0rqgle5h2" path="res://main/player/head.png" id="2_olktr"]
 [ext_resource type="AudioStream" uid="uid://baiq80vye838" path="res://main/player/sand1.ogg" id="2_whqfy"]
@@ -115,7 +116,7 @@ length = 0.001
 tracks/0/type = "bezier"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Head:position:y")
+tracks/0/path = NodePath("Sprites/Head:position:y")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -126,7 +127,7 @@ tracks/0/keys = {
 tracks/1/type = "bezier"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Torso:position:y")
+tracks/1/path = NodePath("Sprites/Torso:position:y")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -144,7 +145,7 @@ loop_mode = 1
 tracks/0/type = "bezier"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Head:position:y")
+tracks/0/path = NodePath("Sprites/Head:position:y")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -155,7 +156,7 @@ tracks/0/keys = {
 tracks/1/type = "bezier"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Torso:position:y")
+tracks/1/path = NodePath("Sprites/Torso:position:y")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -195,13 +196,17 @@ colors = PackedColorArray(0.661081, 0.661081, 0.661081, 1, 0, 0, 0, 1)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_yu747"]
 
-[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("sprite", "walk_anim", "step_particles", "step_player")]
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("sprite", "plant_ray_cast", "walk_anim", "step_particles", "step_player")]
 collision_layer = 2
+collision_mask = 5
 script = ExtResource("1_naety")
-sprite = NodePath("Head")
+plant_radius = 24.0
+sprite = NodePath("Sprites/Head")
+plant_ray_cast = NodePath("PlantRayCast")
 walk_anim = NodePath("WalkAnimationPlayer")
 step_particles = NodePath("StepParticles")
 step_player = NodePath("StepPlayer")
+fruit_scene = ExtResource("2_bppp1")
 speed = 98.0
 
 [node name="StepPlayer" type="AudioStreamPlayer" parent="."]
@@ -210,7 +215,7 @@ volume_db = -16.0
 bus = &"Sfx"
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-root_node = NodePath("../Head")
+root_node = NodePath("../Sprites/Head")
 libraries = {
 "": SubResource("AnimationLibrary_qmc2x")
 }
@@ -225,7 +230,6 @@ speed_scale = 4.6
 
 [node name="StepParticles" type="CPUParticles2D" parent="."]
 z_index = -1
-position = Vector2(0, 28)
 emitting = false
 lifetime = 0.3
 one_shot = true
@@ -243,24 +247,33 @@ scale_amount_max = 0.05
 scale_amount_curve = SubResource("Curve_rtmgt")
 color_ramp = SubResource("Gradient_ox2xn")
 
-[node name="Shadow" parent="." instance=ExtResource("2_ii7b7")]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_yu747")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+offset = Vector2(0, -16)
+
+[node name="Sprites" type="Node2D" parent="."]
+position = Vector2(0, -21)
+scale = Vector2(0.75, 0.75)
+
+[node name="Shadow" parent="Sprites" instance=ExtResource("2_ii7b7")]
 position = Vector2(-0.5, 31)
 scale = Vector2(0.09, 0.09)
 
-[node name="Torso" type="Sprite2D" parent="."]
+[node name="Torso" type="Sprite2D" parent="Sprites"]
 position = Vector2(0, 23)
 scale = Vector2(0.15, 0.08)
 texture = ExtResource("3_13ton")
 offset = Vector2(0, -18)
 
-[node name="Head" type="Sprite2D" parent="."]
+[node name="Head" type="Sprite2D" parent="Sprites"]
 scale = Vector2(0.3, 0.3)
 texture = ExtResource("2_olktr")
 offset = Vector2(0, -6)
 hframes = 8
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("CircleShape2D_yu747")
-
-[node name="Camera2D" type="Camera2D" parent="."]
-offset = Vector2(0, 8)
+[node name="PlantRayCast" type="RayCast2D" parent="."]
+target_position = Vector2(0, 24)
+collision_mask = 5
+collide_with_areas = true
