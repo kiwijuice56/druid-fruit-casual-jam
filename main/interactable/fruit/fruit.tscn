@@ -1,10 +1,10 @@
 [gd_scene load_steps=14 format=3 uid="uid://yiinihgthmfb"]
 
-[ext_resource type="PackedScene" uid="uid://b84ceqsyuo4b0" path="res://main/asset/shadow/shadow.tscn" id="1_lbeaw"]
-[ext_resource type="Script" path="res://main/fruit/fruit.gd" id="1_nhot4"]
-[ext_resource type="PackedScene" uid="uid://c5e4iunc8y22q" path="res://main/fractal/baby_fractal/baby_fractal.tscn" id="1_yh4b0"]
-[ext_resource type="Texture2D" uid="uid://c5uadakhjlplf" path="res://main/fruit/stem.png" id="3_4v7k8"]
-[ext_resource type="Texture2D" uid="uid://dsoiju4qv1htl" path="res://main/fruit/mound.png" id="3_7i2si"]
+[ext_resource type="Script" path="res://main/interactable/fruit/fruit.gd" id="1_w2cmt"]
+[ext_resource type="PackedScene" uid="uid://b84ceqsyuo4b0" path="res://main/asset/shadow/shadow.tscn" id="2_lb0hv"]
+[ext_resource type="Texture2D" uid="uid://dsoiju4qv1htl" path="res://main/interactable/fruit/mound.png" id="3_jnqb5"]
+[ext_resource type="Texture2D" uid="uid://c5uadakhjlplf" path="res://main/interactable/fruit/stem.png" id="4_wmfh1"]
+[ext_resource type="PackedScene" uid="uid://c5e4iunc8y22q" path="res://main/fractal/baby_fractal/baby_fractal.tscn" id="5_duq6b"]
 
 [sub_resource type="Animation" id="Animation_aa2dd"]
 length = 0.001
@@ -222,7 +222,7 @@ _data = {
 }
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_6pegn"]
-radius = 32.0
+radius = 16.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_4ru0q"]
 radius = 12.0
@@ -230,7 +230,7 @@ radius = 12.0
 [node name="Fruit" type="Area2D"]
 collision_layer = 4
 collision_mask = 0
-script = ExtResource("1_nhot4")
+script = ExtResource("1_w2cmt")
 metadata/_edit_vertical_guides_ = [-97.0]
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
@@ -250,23 +250,23 @@ speed_scale = 0.01
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_6pegn")
 
-[node name="Shadow" parent="." instance=ExtResource("1_lbeaw")]
+[node name="Shadow" parent="." instance=ExtResource("2_lb0hv")]
 position = Vector2(-1, 3)
 scale = Vector2(0.04, 0.03)
 
-[node name="BulbShadow" parent="." instance=ExtResource("1_lbeaw")]
+[node name="BulbShadow" parent="." instance=ExtResource("2_lb0hv")]
 position = Vector2(-1, 3)
 scale = Vector2(0.06, 0.06)
 
 [node name="Mound" type="Sprite2D" parent="."]
 visible = false
 position = Vector2(-1, 3)
-texture = ExtResource("3_7i2si")
+texture = ExtResource("3_jnqb5")
 
 [node name="Stem" type="Sprite2D" parent="."]
 position = Vector2(12, -9)
 scale = Vector2(0.2, 0.2)
-texture = ExtResource("3_4v7k8")
+texture = ExtResource("4_wmfh1")
 hframes = 10
 
 [node name="FractalHolder" type="Control" parent="."]
@@ -277,7 +277,7 @@ offset_right = 40.0
 offset_bottom = 40.0
 scale = Vector2(0.898135, 0.963409)
 
-[node name="BabyFractal" parent="FractalHolder" instance=ExtResource("1_yh4b0")]
+[node name="BabyFractal" parent="FractalHolder" instance=ExtResource("5_duq6b")]
 y_sort_enabled = true
 layout_mode = 0
 offset_left = -23.0

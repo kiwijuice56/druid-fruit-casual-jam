@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c5uadakhjlplf"
-path="res://.godot/imported/stem.png-4172f068e581a0d964e54099c6d12bef.ctex"
+uid="uid://dsoiju4qv1htl"
+path="res://.godot/imported/mound.png-8b6181989c4357427fa5e2bd5c6e009a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://main/fruit/stem.png"
-dest_files=["res://.godot/imported/stem.png-4172f068e581a0d964e54099c6d12bef.ctex"]
+source_file="res://main/interactable/fruit/mound.png"
+dest_files=["res://.godot/imported/mound.png-8b6181989c4357427fa5e2bd5c6e009a.ctex"]
 
 [params]
 

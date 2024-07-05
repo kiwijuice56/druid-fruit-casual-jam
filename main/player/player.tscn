@@ -1,8 +1,8 @@
-[gd_scene load_steps=21 format=3 uid="uid://bujtvxtfgewh6"]
+[gd_scene load_steps=22 format=3 uid="uid://bujtvxtfgewh6"]
 
 [ext_resource type="Script" path="res://main/player/player.gd" id="1_naety"]
-[ext_resource type="PackedScene" uid="uid://yiinihgthmfb" path="res://main/fruit/fruit.tscn" id="2_bppp1"]
 [ext_resource type="PackedScene" uid="uid://b84ceqsyuo4b0" path="res://main/asset/shadow/shadow.tscn" id="2_ii7b7"]
+[ext_resource type="PackedScene" uid="uid://yiinihgthmfb" path="res://main/interactable/fruit/fruit.tscn" id="2_nb0jy"]
 [ext_resource type="Texture2D" uid="uid://flt0rqgle5h2" path="res://main/player/head.png" id="2_olktr"]
 [ext_resource type="AudioStream" uid="uid://baiq80vye838" path="res://main/player/sand1.ogg" id="2_whqfy"]
 [ext_resource type="Texture2D" uid="uid://bqtkb24lv5nr2" path="res://main/player/cloak.png" id="3_13ton"]
@@ -196,18 +196,21 @@ colors = PackedColorArray(0.661081, 0.661081, 0.661081, 1, 0, 0, 0, 1)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_yu747"]
 
-[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("sprite", "plant_ray_cast", "walk_anim", "step_particles", "step_player")]
+[sub_resource type="CircleShape2D" id="CircleShape2D_1qgq1"]
+
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("interact_area", "sprite", "plant_ray_cast", "walk_anim", "step_particles", "step_player")]
 collision_layer = 2
 collision_mask = 5
 script = ExtResource("1_naety")
 plant_radius = 24.0
+speed = 98.0
+fruit_scene = ExtResource("2_nb0jy")
+interact_area = NodePath("InteractArea")
 sprite = NodePath("Sprites/Head")
 plant_ray_cast = NodePath("PlantRayCast")
 walk_anim = NodePath("WalkAnimationPlayer")
 step_particles = NodePath("StepParticles")
 step_player = NodePath("StepPlayer")
-fruit_scene = ExtResource("2_bppp1")
-speed = 98.0
 
 [node name="StepPlayer" type="AudioStreamPlayer" parent="."]
 stream = SubResource("AudioStreamRandomizer_kyrkl")
@@ -277,3 +280,10 @@ hframes = 8
 target_position = Vector2(0, 24)
 collision_mask = 5
 collide_with_areas = true
+
+[node name="InteractArea" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractArea"]
+shape = SubResource("CircleShape2D_1qgq1")
