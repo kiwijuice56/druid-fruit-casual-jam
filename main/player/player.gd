@@ -18,6 +18,7 @@ var interactables: Array[Interactable]
 var last_dir: Vector2 
 
 var can_interact: bool = true
+var frozen: bool = false
 
 func _ready() -> void:
 	interact_area.area_entered.connect(_on_area_entered)
@@ -52,6 +53,9 @@ func _input(event: InputEvent) -> void:
 		interact_target.interact(self)
 
 func _physics_process(_delta: float) -> void:
+	if frozen:
+		return
+	
 	var input: Vector2 = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
 	
 	if last_dir.length() <= 0: # initialization 

@@ -4,6 +4,8 @@ class_name Fruit extends Interactable
 @export var dry_color: Color
 @export var wet_color: Color
 
+@onready var personality: float = randf_range(0.75, 1.25)
+
 var water_progress: float = 1.0
 
 var can_harvest: bool = false:
@@ -26,11 +28,11 @@ func _on_finished_growing(_animation: String) -> void:
 	can_harvest = true
 
 func _physics_process(delta: float) -> void:
-	water_progress -= delta * drying_speed * 1.0 / 64.0
+	water_progress -= delta * drying_speed * 1.0 / 64.0 * personality
 	water_progress = clamp(water_progress, 0.0, 1.0)
 	modulate = lerp(dry_color, wet_color, water_progress)
 	
-	%GrowAnimationPlayer.speed_scale = (0.5 + 0.5 * water_progress) * 0.2
+	%GrowAnimationPlayer.speed_scale = personality * ((0.5 + 0.5 * water_progress) * 0.01)
 	
 	if not can_water and water_progress < 0.90:
 		can_water = true
@@ -47,6 +49,7 @@ func interact_string() -> String:
 func interact(player: Player) -> void:
 	player.can_interact = true
 	if can_harvest:
+		Data.fruits += 1
 		queue_free()
 	if can_water:
 		water_progress = 1.0

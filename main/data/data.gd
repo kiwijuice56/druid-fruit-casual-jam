@@ -2,10 +2,16 @@ extends Node
 
 signal data_changed
 
-var seeds: int = 0:
+var seeds: int:
 	set(val):
 		seeds = val
 		data_changed.emit()
 
+var fruits: int:
+	set(val):
+		fruits = val
+		data_changed.emit()
+
 func _ready() -> void:
-	seeds = 8
+	seeds = 3
+	fruits = 0
