@@ -17,25 +17,39 @@ var interact_target: Interactable
 var interactables: Array[Interactable]
 var last_dir: Vector2 
 
+var can_interact: bool = true
+
 func _ready() -> void:
 	interact_area.area_entered.connect(_on_area_entered)
 	interact_area.area_exited.connect(_on_area_exited)
 
 func _on_area_entered(area: Area2D) -> void:
+	area.interact_changed.connect(_on_interact_changed)
 	if not area in interactables:
 		interactables.append(area as Interactable)
 	update_target()
 
 func _on_area_exited(area: Area2D) -> void:
+	area.interact_changed.disconnect(_on_interact_changed)
 	if area in interactables:
 		interactables.remove_at(interactables.find(area as Interactable))
 	update_target()
 
+func _on_interact_changed() -> void:
+	update_target()
+
 func _input(event: InputEvent) -> void:
+	if not can_interact:
+		return
+	
 	if event.is_action_pressed("plant", false):
 		if Data.seeds <= 0:
 			return
 		plant()
+	
+	if event.is_action_pressed("interact", false) and is_instance_valid(interact_target):
+		can_interact = false # target must reset this!
+		interact_target.interact(self)
 
 func _physics_process(_delta: float) -> void:
 	var input: Vector2 = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
