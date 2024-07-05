@@ -1,6 +1,11 @@
 extends Node
 
-var seeds: int = 0
+signal data_changed
+
+var seeds: int = 0:
+	set(val):
+		seeds = val
+		data_changed.emit()
 
 func _ready() -> void:
 	seeds = 8

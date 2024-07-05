@@ -245,7 +245,7 @@ libraries = {
 "": SubResource("AnimationLibrary_1qsc0")
 }
 autoplay = "grow"
-speed_scale = 0.05
+speed_scale = 0.01
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_6pegn")
