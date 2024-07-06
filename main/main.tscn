@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://cg6gxxmwtunye"]
+[gd_scene load_steps=24 format=3 uid="uid://cg6gxxmwtunye"]
 
 [ext_resource type="AudioStream" uid="uid://bg1d42es5pkhd" path="res://main/music/fractal_music.ogg" id="1_r2h3c"]
 [ext_resource type="PackedScene" uid="uid://cp2p4qglkd0yh" path="res://main/fractal/fractal.tscn" id="1_wh10r"]
@@ -11,11 +11,13 @@
 [ext_resource type="TileSet" uid="uid://4cpb75gtlnd1" path="res://main/world/tileset/basic_tileset.tres" id="5_g5swk"]
 [ext_resource type="Shader" path="res://main/ui/vignette.gdshader" id="5_ippqp"]
 [ext_resource type="PackedScene" uid="uid://cn36a2w82vx3l" path="res://main/interactable/sapling/sapling.tscn" id="5_kkdfu"]
+[ext_resource type="PackedScene" uid="uid://caw681pxcjose" path="res://main/decoration/spike/spike.tscn" id="6_0sv2d"]
 [ext_resource type="PackedScene" uid="uid://bujtvxtfgewh6" path="res://main/player/player.tscn" id="6_oshvt"]
 [ext_resource type="PackedScene" uid="uid://c5e4iunc8y22q" path="res://main/fractal/baby_fractal/baby_fractal.tscn" id="7_i71pd"]
 [ext_resource type="Script" path="res://main/ui/interact_label.gd" id="8_1lx0r"]
 [ext_resource type="Texture2D" uid="uid://cdpak2epy427w" path="res://main/ui/seed_icon.png" id="8_chbmg"]
 [ext_resource type="Script" path="res://main/ui/property_label.gd" id="8_y18kr"]
+[ext_resource type="PackedScene" uid="uid://g1wq4nda7mvf" path="res://main/decoration/water/water.tscn" id="9_bkrme"]
 [ext_resource type="Script" path="res://main/ui/god_layer.gd" id="12_kiemv"]
 [ext_resource type="FontFile" uid="uid://b1a1pehnsvr2k" path="res://main/ui/graf.ttf" id="13_sak1r"]
 
@@ -56,12 +58,9 @@ layer_0/tile_data = PackedInt32Array(-1, 1, 0, 65535, 65537, 0, 0, 65537, 0, -65
 position = Vector2(162, 90)
 god_layer = NodePath("../../../GodLayer")
 
-[node name="Sapling" parent="Worldlayer/World" instance=ExtResource("5_kkdfu")]
-position = Vector2(65, 176)
-
 [node name="Player" parent="Worldlayer/World" instance=ExtResource("6_oshvt")]
 unique_name_in_owner = true
-position = Vector2(-124, 57)
+position = Vector2(-302, 817)
 
 [node name="CollisionTileMap" type="TileMap" parent="Worldlayer/World"]
 unique_name_in_owner = true
@@ -70,6 +69,355 @@ tile_set = ExtResource("4_s17fs")
 collision_visibility_mode = 1
 format = 2
 layer_0/tile_data = PackedInt32Array(-327689, 0, 0, -262153, 0, 0, -196617, 0, 0, -131081, 0, 0, -65545, 0, 0, -9, 0, 0, 65527, 0, 0, 131063, 0, 0, 196599, 0, 0, 262135, 0, 0, 327671, 0, 0, 393207, 0, 0, 458743, 0, 0, 524279, 0, 0, 589815, 0, 0, 655351, 0, 0, 720887, 0, 0, 786423, 0, 0, 851959, 0, 0, 917495, 0, 0, 983031, 0, 0, 1048567, 0, 0, 1114103, 0, 0, 1179639, 0, 0, 1245175, 0, 0, -327688, 0, 0, -327687, 0, 0, -327686, 0, 0, -327685, 0, 0, -327684, 0, 0, -327683, 0, 0, -327682, 0, 0, -327681, 0, 0, -393216, 0, 0, -393215, 0, 0, -393214, 0, 0, -393213, 0, 0, -393212, 0, 0, -393211, 0, 0, -393210, 0, 0, -393209, 0, 0, -393208, 0, 0, -393207, 0, 0, -393206, 0, 0, -393205, 0, 0, -393204, 0, 0, -393203, 0, 0, -393202, 0, 0, -393201, 0, 0, -393200, 0, 0, -393199, 0, 0, -393198, 0, 0, -393197, 0, 0, -393196, 0, 0, -393195, 0, 0, -393194, 0, 0, -327657, 0, 0, -262121, 0, 0, -196585, 0, 0, -131049, 0, 0, -65513, 0, 0, 23, 0, 0, 65559, 0, 0, 131095, 0, 0, 196631, 0, 0, 262167, 0, 0, 327703, 0, 0, 393239, 0, 0, 458775, 0, 0, 524311, 0, 0, 589847, 0, 0, 655383, 0, 0, 720919, 0, 0, 786455, 0, 0, 851991, 0, 0, 917527, 0, 0, 983063, 0, 0, 1048599, 0, 0, 1114135, 0, 0, 1179671, 0, 0, 1245207, 0, 0, 1310711, 0, 0, 1310712, 0, 0, 1310713, 0, 0, 1310714, 0, 0, 1310715, 0, 0, 1310716, 0, 0, 1310717, 0, 0, 1310718, 0, 0, 1310719, 0, 0, 1245184, 0, 0, 1245185, 0, 0, 1245186, 0, 0, 1245187, 0, 0, 1245188, 0, 0, 1245189, 0, 0, 1245190, 0, 0, 1245191, 0, 0, 1245192, 0, 0, 1245193, 0, 0, 1245194, 0, 0, 1245195, 0, 0, 1245196, 0, 0, 1245197, 0, 0, 1245198, 0, 0, 1245199, 0, 0, 1245200, 0, 0, 1245201, 0, 0, 1245202, 0, 0, 1245203, 0, 0, 1245204, 0, 0, 1245205, 0, 0, 1245206, 0, 0, -393193, 0, 0)
+
+[node name="Saplings" type="Node2D" parent="Worldlayer/World"]
+y_sort_enabled = true
+
+[node name="Sapling" parent="Worldlayer/World/Saplings" instance=ExtResource("5_kkdfu")]
+position = Vector2(65, 176)
+
+[node name="Sapling2" parent="Worldlayer/World/Saplings" instance=ExtResource("5_kkdfu")]
+position = Vector2(-23, 129)
+
+[node name="Sapling3" parent="Worldlayer/World/Saplings" instance=ExtResource("5_kkdfu")]
+position = Vector2(98, -29)
+
+[node name="Decoration" type="Node2D" parent="Worldlayer/World"]
+y_sort_enabled = true
+
+[node name="Spike" parent="Worldlayer/World/Decoration" instance=ExtResource("6_0sv2d")]
+position = Vector2(-212, -93)
+
+[node name="Spike2" parent="Worldlayer/World/Decoration" instance=ExtResource("6_0sv2d")]
+position = Vector2(-76, -66)
+
+[node name="Spike13" parent="Worldlayer/World/Decoration" instance=ExtResource("6_0sv2d")]
+position = Vector2(-457, 138)
+
+[node name="Spike14" parent="Worldlayer/World/Decoration" instance=ExtResource("6_0sv2d")]
+position = Vector2(-336, 260)
+
+[node name="Spike15" parent="Worldlayer/World/Decoration" instance=ExtResource("6_0sv2d")]
+position = Vector2(-439, 430)
+
+[node name="Spike16" parent="Worldlayer/World/Decoration" instance=ExtResource("6_0sv2d")]
+position = Vector2(43, -275)
+
+[node name="Spike17" parent="Worldlayer/World/Decoration" instance=ExtResource("6_0sv2d")]
+position = Vector2(-72, 437)
+
+[node name="Spike3" parent="Worldlayer/World/Decoration" instance=ExtResource("6_0sv2d")]
+position = Vector2(-135, -220)
+
+[node name="Spike4" parent="Worldlayer/World/Decoration" instance=ExtResource("6_0sv2d")]
+position = Vector2(-320, 36)
+
+[node name="Spike5" parent="Worldlayer/World/Decoration" instance=ExtResource("6_0sv2d")]
+position = Vector2(-188, 58)
+
+[node name="Spike6" parent="Worldlayer/World/Decoration" instance=ExtResource("6_0sv2d")]
+position = Vector2(-338, -100)
+
+[node name="Spike7" parent="Worldlayer/World/Decoration" instance=ExtResource("6_0sv2d")]
+position = Vector2(-419, -37)
+
+[node name="Spike8" parent="Worldlayer/World/Decoration" instance=ExtResource("6_0sv2d")]
+position = Vector2(-480, -106)
+
+[node name="Spike9" parent="Worldlayer/World/Decoration" instance=ExtResource("6_0sv2d")]
+position = Vector2(-411, -149)
+
+[node name="Spike10" parent="Worldlayer/World/Decoration" instance=ExtResource("6_0sv2d")]
+position = Vector2(-477, -228)
+
+[node name="Spike11" parent="Worldlayer/World/Decoration" instance=ExtResource("6_0sv2d")]
+position = Vector2(-366, -283)
+
+[node name="Spike12" parent="Worldlayer/World/Decoration" instance=ExtResource("6_0sv2d")]
+position = Vector2(-268, -215)
+
+[node name="Water" type="Node2D" parent="Worldlayer/World"]
+y_sort_enabled = true
+position = Vector2(-512, 960)
+
+[node name="Water2" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(32, 96)
+
+[node name="Water4" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(96, 96)
+
+[node name="Water5" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(32, 160)
+
+[node name="Water6" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(32, 224)
+
+[node name="Water7" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(96, 160)
+
+[node name="Water8" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(96, 224)
+
+[node name="Water10" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(160, 96)
+
+[node name="Water12" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(224, 96)
+
+[node name="Water13" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(160, 160)
+
+[node name="Water14" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(160, 224)
+
+[node name="Water15" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(224, 160)
+
+[node name="Water16" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(224, 224)
+
+[node name="Water18" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(288, 96)
+
+[node name="Water20" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(352, 96)
+
+[node name="Water21" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(288, 160)
+
+[node name="Water22" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(288, 224)
+
+[node name="Water23" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(352, 160)
+
+[node name="Water24" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(352, 224)
+
+[node name="Water26" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(416, 96)
+
+[node name="Water28" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(480, 96)
+
+[node name="Water29" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(416, 160)
+
+[node name="Water30" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(416, 224)
+
+[node name="Water31" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(480, 160)
+
+[node name="Water32" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(480, 224)
+
+[node name="Water3" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(544, 96)
+
+[node name="Water9" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(608, 96)
+
+[node name="Water11" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(544, 160)
+
+[node name="Water17" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(544, 224)
+
+[node name="Water19" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(608, 160)
+
+[node name="Water25" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(608, 224)
+
+[node name="Water27" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(672, 96)
+
+[node name="Water33" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(736, 96)
+
+[node name="Water34" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(672, 160)
+
+[node name="Water35" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(672, 224)
+
+[node name="Water36" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(736, 160)
+
+[node name="Water37" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(736, 224)
+
+[node name="Water38" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(800, 96)
+
+[node name="Water39" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(864, 96)
+
+[node name="Water40" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(800, 160)
+
+[node name="Water41" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(800, 224)
+
+[node name="Water42" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(864, 160)
+
+[node name="Water43" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(864, 224)
+
+[node name="Water44" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(928, 96)
+
+[node name="Water45" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(992, 96)
+
+[node name="Water46" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(928, 160)
+
+[node name="Water47" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(928, 224)
+
+[node name="Water48" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(992, 160)
+
+[node name="Water49" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(992, 224)
+
+[node name="Water50" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(1056, 96)
+
+[node name="Water51" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(1120, 96)
+
+[node name="Water52" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(1056, 160)
+
+[node name="Water53" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(1056, 224)
+
+[node name="Water54" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(1120, 160)
+
+[node name="Water55" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(1120, 224)
+
+[node name="Water56" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(1184, 96)
+
+[node name="Water57" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(1248, 96)
+
+[node name="Water58" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(1184, 160)
+
+[node name="Water59" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(1184, 224)
+
+[node name="Water60" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(1248, 160)
+
+[node name="Water61" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(1248, 224)
+
+[node name="Water62" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(1312, 96)
+
+[node name="Water63" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(1376, 96)
+
+[node name="Water64" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(1312, 160)
+
+[node name="Water65" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(1312, 224)
+
+[node name="Water66" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(1376, 160)
+
+[node name="Water67" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(1376, 224)
+
+[node name="Water68" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(1440, 96)
+
+[node name="Water69" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(1504, 96)
+
+[node name="Water70" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(1440, 160)
+
+[node name="Water71" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(1440, 224)
+
+[node name="Water72" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(1504, 160)
+
+[node name="Water73" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(1504, 224)
+
+[node name="Water74" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(1568, 96)
+
+[node name="Water75" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(1632, 96)
+
+[node name="Water76" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(1568, 160)
+
+[node name="Water77" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(1568, 224)
+
+[node name="Water78" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(1632, 160)
+
+[node name="Water79" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(1632, 224)
+
+[node name="Water80" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(1696, 96)
+
+[node name="Water81" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(1760, 96)
+
+[node name="Water82" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(1696, 160)
+
+[node name="Water83" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(1696, 224)
+
+[node name="Water84" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(1760, 160)
+
+[node name="Water85" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(1760, 224)
+
+[node name="Water86" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(1824, 96)
+
+[node name="Water87" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(1888, 96)
+
+[node name="Water88" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(1824, 160)
+
+[node name="Water89" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(1824, 224)
+
+[node name="Water90" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(1888, 160)
+
+[node name="Water91" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(1888, 224)
+
+[node name="Water92" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(1952, 96)
+
+[node name="Water94" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(1952, 160)
+
+[node name="Water95" parent="Worldlayer/World/Water" instance=ExtResource("9_bkrme")]
+position = Vector2(1952, 224)
 
 [node name="UILayer" type="CanvasLayer" parent="."]
 

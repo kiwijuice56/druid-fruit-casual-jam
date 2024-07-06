@@ -54,10 +54,10 @@ func interact(player: Player) -> void:
 	player.can_interact = true
 	if can_harvest:
 		set_physics_process(false)
+		Data.fruits += 1
 		%GrowAnimationPlayer.speed_scale = 2.0
 		%GrowAnimationPlayer.play("harvest")
 		await %GrowAnimationPlayer.animation_finished
-		Data.fruits += 1
 		queue_free()
 	if can_water:
 		%WaterAnimationPlayer.play("water")

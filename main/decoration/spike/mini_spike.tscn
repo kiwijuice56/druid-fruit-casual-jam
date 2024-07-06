@@ -1,0 +1,25 @@
+[gd_scene load_steps=5 format=3 uid="uid://cub7muf7w5m8w"]
+
+[ext_resource type="Texture2D" uid="uid://dorm0lkbmsij4" path="res://main/decoration/spike/minispike.png" id="1_v5wx7"]
+[ext_resource type="Script" path="res://main/decoration/spike/spike.gd" id="2_du3mk"]
+[ext_resource type="PackedScene" uid="uid://b84ceqsyuo4b0" path="res://main/asset/shadow/shadow.tscn" id="3_dekwo"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_up34j"]
+radius = 52.0
+
+[node name="MiniSpike" type="Sprite2D"]
+position = Vector2(-94, 213)
+scale = Vector2(0.4, 0.4)
+texture = ExtResource("1_v5wx7")
+script = ExtResource("2_du3mk")
+
+[node name="Shadow" parent="." instance=ExtResource("3_dekwo")]
+position = Vector2(-7.39098e-06, 110)
+scale = Vector2(0.3, 0.2)
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+position = Vector2(-7.5, 85)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(5, -17.5)
+shape = SubResource("CircleShape2D_up34j")
