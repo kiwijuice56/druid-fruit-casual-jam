@@ -1,10 +1,11 @@
-[gd_scene load_steps=14 format=3 uid="uid://yiinihgthmfb"]
+[gd_scene load_steps=20 format=3 uid="uid://yiinihgthmfb"]
 
 [ext_resource type="Script" path="res://main/interactable/fruit/fruit.gd" id="1_w2cmt"]
 [ext_resource type="PackedScene" uid="uid://b84ceqsyuo4b0" path="res://main/asset/shadow/shadow.tscn" id="2_lb0hv"]
 [ext_resource type="Texture2D" uid="uid://dsoiju4qv1htl" path="res://main/interactable/fruit/mound.png" id="3_jnqb5"]
 [ext_resource type="Texture2D" uid="uid://c5uadakhjlplf" path="res://main/interactable/fruit/stem.png" id="4_wmfh1"]
 [ext_resource type="PackedScene" uid="uid://c5e4iunc8y22q" path="res://main/fractal/baby_fractal/baby_fractal.tscn" id="5_duq6b"]
+[ext_resource type="PackedScene" uid="uid://by0iehnr1kkm6" path="res://main/interactable/fruit/rain_particles.tscn" id="6_8dyry"]
 
 [sub_resource type="Animation" id="Animation_aa2dd"]
 length = 0.001
@@ -137,6 +138,29 @@ tracks/5/keys = {
 "update": 0,
 "values": [Vector2(-1, 3)]
 }
+tracks/6/type = "bezier"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("FractalHolder:position:y")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("Stem:self_modulate")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
 
 [sub_resource type="Animation" id="Animation_tfvds"]
 resource_name = "grow"
@@ -214,23 +238,153 @@ tracks/5/keys = {
 "values": [Vector2(-1, 3), Vector2(-5.96046e-08, 3), Vector2(1, 3), Vector2(6, 3), Vector2(6, 3), Vector2(8, 3), Vector2(20, 3), Vector2(21, 3), Vector2(21, 3)]
 }
 
+[sub_resource type="Animation" id="Animation_qddyv"]
+resource_name = "harvest"
+length = 0.9
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("FractalHolder/BabyFractal:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.9),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0.8, 0.8), Vector2(0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Stem:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [7, 6, 5, 4, 3, 2, 1, 0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("BulbShadow:scale")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.9),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0.08, 0.08), Vector2(0, 0)]
+}
+tracks/3/type = "bezier"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("FractalHolder:position:y")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0, -16, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 0.9)
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Stem:self_modulate")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.9),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(0, 0, 0, 1)]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_1qsc0"]
 _data = {
 "RESET": SubResource("Animation_icthx"),
-"grow": SubResource("Animation_tfvds")
+"grow": SubResource("Animation_tfvds"),
+"harvest": SubResource("Animation_qddyv")
 }
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_6pegn"]
 radius = 16.0
 
+[sub_resource type="Curve" id="Curve_5k2hf"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.159905, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.470951), 0.0, 0.0, 0, 0]
+point_count = 3
+
 [sub_resource type="CircleShape2D" id="CircleShape2D_4ru0q"]
 radius = 12.0
+
+[sub_resource type="Animation" id="Animation_ysmy4"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("RainParticles:emitting")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("RainParticles2:emitting")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="Animation" id="Animation_vy7hp"]
+resource_name = "water"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("RainParticles:emitting")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("RainParticles2:emitting")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.1),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ujsn0"]
+_data = {
+"RESET": SubResource("Animation_ysmy4"),
+"water": SubResource("Animation_vy7hp")
+}
 
 [node name="Fruit" type="Area2D"]
 collision_layer = 4
 collision_mask = 0
 script = ExtResource("1_w2cmt")
-dry_color = Color(0.471375, 0.471375, 0.471375, 1)
+growing_speed = 8.0
+drying_speed = 4.0
+dry_color = Color(0.386757, 0.386757, 0.386757, 1)
 wet_color = Color(1, 1, 1, 1)
 metadata/_edit_vertical_guides_ = [-97.0]
 
@@ -246,7 +400,6 @@ unique_name_in_owner = true
 libraries = {
 "": SubResource("AnimationLibrary_1qsc0")
 }
-speed_scale = 0.01
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_6pegn")
@@ -288,9 +441,36 @@ offset_bottom = 25.0
 scale = Vector2(0.1, 0.1)
 pivot_offset = Vector2(23, 23)
 
+[node name="RainParticles" parent="." instance=ExtResource("6_8dyry")]
+position = Vector2(0, -34)
+emitting = false
+amount = 32
+lifetime = 0.3
+one_shot = true
+scale_amount_min = 0.07
+scale_amount_curve = SubResource("Curve_5k2hf")
+
+[node name="RainParticles2" parent="." instance=ExtResource("6_8dyry")]
+position = Vector2(-1, -3)
+emitting = false
+amount = 32
+lifetime = 0.4
+one_shot = true
+particle_flag_align_y = true
+direction = Vector2(0, -1)
+initial_velocity_min = 64.0
+initial_velocity_max = 128.0
+scale_amount_min = 0.06
+
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 collision_layer = 4
 collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
 shape = SubResource("CircleShape2D_4ru0q")
+
+[node name="WaterAnimationPlayer" type="AnimationPlayer" parent="."]
+unique_name_in_owner = true
+libraries = {
+"": SubResource("AnimationLibrary_ujsn0")
+}

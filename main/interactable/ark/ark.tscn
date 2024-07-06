@@ -8,6 +8,21 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_ieysq"]
 radius = 32.0
 
+[sub_resource type="Animation" id="Animation_7lkxy"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:energy")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.5]
+}
+
 [sub_resource type="Animation" id="Animation_2kf0a"]
 resource_name = "bob"
 loop_mode = 1
@@ -22,21 +37,6 @@ tracks/0/keys = {
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [0.5, 0.3]
-}
-
-[sub_resource type="Animation" id="Animation_7lkxy"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:energy")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [0.5]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_p4kqv"]
@@ -57,11 +57,11 @@ collision_mask = 0
 script = ExtResource("1_r2atf")
 
 [node name="Shadow" parent="." instance=ExtResource("1_nhgih")]
-position = Vector2(-2, 34)
+position = Vector2(-1.5, 31.05)
 scale = Vector2(0.35, 0.1)
 
 [node name="Shadow2" parent="." instance=ExtResource("1_nhgih")]
-position = Vector2(0, 34.44)
+position = Vector2(0.5, 31.49)
 scale = Vector2(0.6, 0.02)
 
 [node name="Sprite2D" type="Sprite2D" parent="."]

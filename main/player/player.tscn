@@ -255,6 +255,10 @@ shape = SubResource("CircleShape2D_yu747")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 offset = Vector2(0, -16)
+limit_left = -500
+limit_top = -300
+limit_right = 1400
+limit_bottom = 1200
 
 [node name="Sprites" type="Node2D" parent="."]
 position = Vector2(0, -21)
