@@ -61,6 +61,7 @@ position = Vector2(-124, 57)
 
 [node name="CollisionTileMap" type="TileMap" parent="Worldlayer/World"]
 unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0.439216)
 tile_set = ExtResource("4_s17fs")
 collision_visibility_mode = 1
 format = 2

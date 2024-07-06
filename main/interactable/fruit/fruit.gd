@@ -11,7 +11,6 @@ var target_modulate: Color
 
 var water_progress: float = 1.0
 
-
 var can_harvest: bool = false:
 	set(val):
 		can_harvest = val
@@ -55,7 +54,7 @@ func interact(player: Player) -> void:
 	player.can_interact = true
 	if can_harvest:
 		set_physics_process(false)
-		%GrowAnimationPlayer.speed_scale = 3.0
+		%GrowAnimationPlayer.speed_scale = 2.0
 		%GrowAnimationPlayer.play("harvest")
 		await %GrowAnimationPlayer.animation_finished
 		Data.fruits += 1
