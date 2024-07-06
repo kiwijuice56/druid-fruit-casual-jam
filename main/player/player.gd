@@ -54,6 +54,7 @@ func _input(event: InputEvent) -> void:
 
 func _physics_process(_delta: float) -> void:
 	if frozen:
+		walk_anim.play("idle")
 		return
 	
 	var input: Vector2 = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")

@@ -7,11 +7,26 @@ func _ready() -> void:
 
 func interact(player: Player) -> void:
 	player.frozen = true
+	play_music()
 	await god_layer.talk()
+	stop_music()
 	Data.seeds += ceil(Data.fruits * 1.5)
 	Data.fruits = 0
 	player.frozen = false
 	player.can_interact = true
+
+func play_music() -> void:
+	%Music.volume_db = -32
+	var tween: Tween = get_tree().create_tween()
+	tween.tween_property(%Music, "volume_db", 0, 0.5)
+	%Music.playing = true
+
+func stop_music() -> void:
+	%Music.volume_db = 0
+	var tween: Tween = get_tree().create_tween()
+	tween.tween_property(%Music, "volume_db", -32, 0.5)
+	await tween.finished
+	%Music.playing = false
 
 func interact_string() -> String:
 	return "z: witness"
