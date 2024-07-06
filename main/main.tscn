@@ -1,7 +1,8 @@
-[gd_scene load_steps=26 format=3 uid="uid://cg6gxxmwtunye"]
+[gd_scene load_steps=31 format=3 uid="uid://cg6gxxmwtunye"]
 
-[ext_resource type="AudioStream" uid="uid://bg1d42es5pkhd" path="res://main/music/fractal_music.ogg" id="1_r2h3c"]
+[ext_resource type="AudioStream" uid="uid://c17c5mp58tb8i" path="res://main/music/fairy_ambiance.ogg" id="1_f5373"]
 [ext_resource type="PackedScene" uid="uid://cp2p4qglkd0yh" path="res://main/fractal/fractal.tscn" id="1_wh10r"]
+[ext_resource type="AudioStream" uid="uid://b05kvmdvha1rx" path="res://main/music/nature.ogg" id="2_2mcl2"]
 [ext_resource type="Shader" path="res://main/palette/palette.gdshader" id="2_w464c"]
 [ext_resource type="Texture2D" uid="uid://c8t5lmn51bdp8" path="res://main/palette/slso8-1x.png" id="3_c1rxx"]
 [ext_resource type="Script" path="res://main/world/world.gd" id="3_pme3a"]
@@ -14,12 +15,18 @@
 [ext_resource type="PackedScene" uid="uid://caw681pxcjose" path="res://main/decoration/spike/spike.tscn" id="6_0sv2d"]
 [ext_resource type="PackedScene" uid="uid://bujtvxtfgewh6" path="res://main/player/player.tscn" id="6_oshvt"]
 [ext_resource type="PackedScene" uid="uid://c5e4iunc8y22q" path="res://main/fractal/baby_fractal/baby_fractal.tscn" id="7_i71pd"]
+[ext_resource type="PackedScene" uid="uid://b84ceqsyuo4b0" path="res://main/asset/shadow/shadow.tscn" id="8_1aew5"]
 [ext_resource type="Script" path="res://main/ui/interact_label.gd" id="8_1lx0r"]
 [ext_resource type="Texture2D" uid="uid://cdpak2epy427w" path="res://main/ui/seed_icon.png" id="8_chbmg"]
 [ext_resource type="Script" path="res://main/ui/property_label.gd" id="8_y18kr"]
 [ext_resource type="PackedScene" uid="uid://g1wq4nda7mvf" path="res://main/decoration/water/water.tscn" id="9_bkrme"]
+[ext_resource type="PackedScene" uid="uid://dmwb120i3l42n" path="res://main/decoration/cube/cube.tscn" id="11_44ph1"]
+[ext_resource type="Texture2D" uid="uid://flt0rqgle5h2" path="res://main/player/head.png" id="11_d7a8q"]
 [ext_resource type="Script" path="res://main/ui/god_layer.gd" id="12_kiemv"]
 [ext_resource type="FontFile" uid="uid://b1a1pehnsvr2k" path="res://main/ui/graf.ttf" id="13_sak1r"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_xjnth"]
+radius = 48.0
 
 [sub_resource type="Gradient" id="Gradient_wue7c"]
 colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 0)
@@ -47,8 +54,20 @@ shader_parameter/palette = ExtResource("3_c1rxx")
 [node name="Main" type="Node"]
 
 [node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("1_r2h3c")
+unique_name_in_owner = true
+stream = ExtResource("1_f5373")
+volume_db = -8.0
 pitch_scale = 0.7
+autoplay = true
+bus = &"Music"
+
+[node name="NaturePlayer" type="AudioStreamPlayer" parent="."]
+unique_name_in_owner = true
+stream = ExtResource("2_2mcl2")
+volume_db = -28.0
+pitch_scale = 0.3
+autoplay = true
+bus = &"Music"
 
 [node name="Worldlayer" type="CanvasLayer" parent="."]
 follow_viewport_enabled = true
@@ -69,7 +88,7 @@ god_layer = NodePath("../../../GodLayer")
 
 [node name="Player" parent="Worldlayer/World" instance=ExtResource("6_oshvt")]
 unique_name_in_owner = true
-position = Vector2(-289, 153)
+position = Vector2(155, 192)
 
 [node name="CollisionTileMap" type="TileMap" parent="Worldlayer/World"]
 unique_name_in_owner = true
@@ -83,13 +102,22 @@ layer_0/tile_data = PackedInt32Array(-327689, 0, 0, -262153, 0, 0, -196617, 0, 0
 y_sort_enabled = true
 
 [node name="Sapling" parent="Worldlayer/World/Saplings" instance=ExtResource("5_kkdfu")]
-position = Vector2(65, 176)
+position = Vector2(-372, 635)
 
 [node name="Sapling2" parent="Worldlayer/World/Saplings" instance=ExtResource("5_kkdfu")]
-position = Vector2(-23, 129)
+position = Vector2(-253, 750)
+
+[node name="Sapling4" parent="Worldlayer/World/Saplings" instance=ExtResource("5_kkdfu")]
+position = Vector2(-146, 673)
 
 [node name="Sapling3" parent="Worldlayer/World/Saplings" instance=ExtResource("5_kkdfu")]
-position = Vector2(98, -29)
+position = Vector2(544, 450)
+
+[node name="Sapling5" parent="Worldlayer/World/Saplings" instance=ExtResource("5_kkdfu")]
+position = Vector2(582, 499)
+
+[node name="Sapling6" parent="Worldlayer/World/Saplings" instance=ExtResource("5_kkdfu")]
+position = Vector2(678, 413)
 
 [node name="Decoration" type="Node2D" parent="Worldlayer/World"]
 y_sort_enabled = true
@@ -108,6 +136,66 @@ position = Vector2(-336, 260)
 
 [node name="Spike15" parent="Worldlayer/World/Decoration" instance=ExtResource("6_0sv2d")]
 position = Vector2(-439, 430)
+
+[node name="Spike18" parent="Worldlayer/World/Decoration" instance=ExtResource("6_0sv2d")]
+position = Vector2(-524, 888)
+
+[node name="Spike37" parent="Worldlayer/World/Decoration" instance=ExtResource("6_0sv2d")]
+position = Vector2(-409, 855)
+
+[node name="Spike19" parent="Worldlayer/World/Decoration" instance=ExtResource("6_0sv2d")]
+position = Vector2(-303, 894)
+
+[node name="Spike20" parent="Worldlayer/World/Decoration" instance=ExtResource("6_0sv2d")]
+position = Vector2(8, 875)
+
+[node name="Spike21" parent="Worldlayer/World/Decoration" instance=ExtResource("6_0sv2d")]
+position = Vector2(231, 731)
+
+[node name="Spike22" parent="Worldlayer/World/Decoration" instance=ExtResource("6_0sv2d")]
+position = Vector2(440, 887)
+
+[node name="Spike23" parent="Worldlayer/World/Decoration" instance=ExtResource("6_0sv2d")]
+position = Vector2(-507, 748)
+
+[node name="Spike24" parent="Worldlayer/World/Decoration" instance=ExtResource("6_0sv2d")]
+position = Vector2(-474, 619)
+
+[node name="Spike25" parent="Worldlayer/World/Decoration" instance=ExtResource("6_0sv2d")]
+position = Vector2(-514, 294)
+
+[node name="Spike26" parent="Worldlayer/World/Decoration" instance=ExtResource("6_0sv2d")]
+position = Vector2(-517, 499)
+
+[node name="Spike27" parent="Worldlayer/World/Decoration" instance=ExtResource("6_0sv2d")]
+position = Vector2(1442, 876)
+
+[node name="Spike28" parent="Worldlayer/World/Decoration" instance=ExtResource("6_0sv2d")]
+position = Vector2(1321, 819)
+
+[node name="Spike29" parent="Worldlayer/World/Decoration" instance=ExtResource("6_0sv2d")]
+position = Vector2(1451, 720)
+
+[node name="Spike30" parent="Worldlayer/World/Decoration" instance=ExtResource("6_0sv2d")]
+position = Vector2(1354, 582)
+
+[node name="Spike31" parent="Worldlayer/World/Decoration" instance=ExtResource("6_0sv2d")]
+position = Vector2(1354, 582)
+
+[node name="Spike32" parent="Worldlayer/World/Decoration" instance=ExtResource("6_0sv2d")]
+position = Vector2(1468, -217)
+
+[node name="Spike33" parent="Worldlayer/World/Decoration" instance=ExtResource("6_0sv2d")]
+position = Vector2(1338, -314)
+
+[node name="Spike34" parent="Worldlayer/World/Decoration" instance=ExtResource("6_0sv2d")]
+position = Vector2(1453, -333)
+
+[node name="Spike35" parent="Worldlayer/World/Decoration" instance=ExtResource("6_0sv2d")]
+position = Vector2(1134, -348)
+
+[node name="Spike36" parent="Worldlayer/World/Decoration" instance=ExtResource("6_0sv2d")]
+position = Vector2(1231, -171)
 
 [node name="Spike16" parent="Worldlayer/World/Decoration" instance=ExtResource("6_0sv2d")]
 position = Vector2(43, -275)
@@ -144,6 +232,26 @@ position = Vector2(-366, -283)
 
 [node name="Spike12" parent="Worldlayer/World/Decoration" instance=ExtResource("6_0sv2d")]
 position = Vector2(-268, -215)
+
+[node name="Cube" parent="Worldlayer/World" instance=ExtResource("11_44ph1")]
+position = Vector2(-247, 656)
+
+[node name="Sprite2D" type="Sprite2D" parent="Worldlayer/World"]
+position = Vector2(628, 452)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("11_d7a8q")
+hframes = 8
+frame = 4
+
+[node name="Shadow" parent="Worldlayer/World/Sprite2D" instance=ExtResource("8_1aew5")]
+position = Vector2(-4, 42)
+scale = Vector2(0.45, 0.54)
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Worldlayer/World/Sprite2D"]
+position = Vector2(0, 14)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Worldlayer/World/Sprite2D/StaticBody2D"]
+shape = SubResource("CircleShape2D_xjnth")
 
 [node name="Water" type="Node2D" parent="Worldlayer/World"]
 y_sort_enabled = true
@@ -526,85 +634,85 @@ texture = SubResource("GradientTexture2D_vuglj")
 
 [node name="Sprite2D18" type="Sprite2D" parent="Worldlayer/World/Water"]
 z_index = 1
-position = Vector2(1120, 73)
+position = Vector2(1120, 72)
 scale = Vector2(1, 0.25)
 texture = SubResource("GradientTexture2D_vuglj")
 
 [node name="Sprite2D19" type="Sprite2D" parent="Worldlayer/World/Water"]
 z_index = 1
-position = Vector2(1056, 73)
+position = Vector2(1056, 72)
 scale = Vector2(1, 0.25)
 texture = SubResource("GradientTexture2D_vuglj")
 
 [node name="Sprite2D20" type="Sprite2D" parent="Worldlayer/World/Water"]
 z_index = 1
-position = Vector2(1248, 73)
+position = Vector2(1248, 72)
 scale = Vector2(1, 0.25)
 texture = SubResource("GradientTexture2D_vuglj")
 
 [node name="Sprite2D21" type="Sprite2D" parent="Worldlayer/World/Water"]
 z_index = 1
-position = Vector2(1184, 73)
+position = Vector2(1184, 72)
 scale = Vector2(1, 0.25)
 texture = SubResource("GradientTexture2D_vuglj")
 
 [node name="Sprite2D22" type="Sprite2D" parent="Worldlayer/World/Water"]
 z_index = 1
-position = Vector2(1376, 73)
+position = Vector2(1376, 72)
 scale = Vector2(1, 0.25)
 texture = SubResource("GradientTexture2D_vuglj")
 
 [node name="Sprite2D23" type="Sprite2D" parent="Worldlayer/World/Water"]
 z_index = 1
-position = Vector2(1312, 73)
+position = Vector2(1312, 72)
 scale = Vector2(1, 0.25)
 texture = SubResource("GradientTexture2D_vuglj")
 
 [node name="Sprite2D24" type="Sprite2D" parent="Worldlayer/World/Water"]
 z_index = 1
-position = Vector2(1504, 73)
+position = Vector2(1504, 72)
 scale = Vector2(1, 0.25)
 texture = SubResource("GradientTexture2D_vuglj")
 
 [node name="Sprite2D25" type="Sprite2D" parent="Worldlayer/World/Water"]
 z_index = 1
-position = Vector2(1440, 73)
+position = Vector2(1440, 72)
 scale = Vector2(1, 0.25)
 texture = SubResource("GradientTexture2D_vuglj")
 
 [node name="Sprite2D26" type="Sprite2D" parent="Worldlayer/World/Water"]
 z_index = 1
-position = Vector2(1632, 73)
+position = Vector2(1632, 72)
 scale = Vector2(1, 0.25)
 texture = SubResource("GradientTexture2D_vuglj")
 
 [node name="Sprite2D27" type="Sprite2D" parent="Worldlayer/World/Water"]
 z_index = 1
-position = Vector2(1568, 73)
+position = Vector2(1568, 72)
 scale = Vector2(1, 0.25)
 texture = SubResource("GradientTexture2D_vuglj")
 
 [node name="Sprite2D28" type="Sprite2D" parent="Worldlayer/World/Water"]
 z_index = 1
-position = Vector2(1760, 73)
+position = Vector2(1760, 72)
 scale = Vector2(1, 0.25)
 texture = SubResource("GradientTexture2D_vuglj")
 
 [node name="Sprite2D29" type="Sprite2D" parent="Worldlayer/World/Water"]
 z_index = 1
-position = Vector2(1696, 73)
+position = Vector2(1696, 72)
 scale = Vector2(1, 0.25)
 texture = SubResource("GradientTexture2D_vuglj")
 
 [node name="Sprite2D30" type="Sprite2D" parent="Worldlayer/World/Water"]
 z_index = 1
-position = Vector2(1888, 73)
+position = Vector2(1888, 72)
 scale = Vector2(1, 0.25)
 texture = SubResource("GradientTexture2D_vuglj")
 
 [node name="Sprite2D31" type="Sprite2D" parent="Worldlayer/World/Water"]
 z_index = 1
-position = Vector2(1824, 73)
+position = Vector2(1824, 72)
 scale = Vector2(1, 0.25)
 texture = SubResource("GradientTexture2D_vuglj")
 
@@ -616,13 +724,13 @@ texture = SubResource("GradientTexture2D_vuglj")
 
 [node name="Sprite2D33" type="Sprite2D" parent="Worldlayer/World/Water"]
 z_index = 1
-position = Vector2(1952, 73)
+position = Vector2(1952, 72)
 scale = Vector2(1, 0.25)
 texture = SubResource("GradientTexture2D_vuglj")
 
 [node name="UILayer" type="CanvasLayer" parent="."]
 
-[node name="ColorRect" type="ColorRect" parent="UILayer"]
+[node name="Vignette" type="ColorRect" parent="UILayer"]
 material = SubResource("ShaderMaterial_btgvu")
 anchors_preset = 15
 anchor_right = 1.0

@@ -43,7 +43,7 @@ func _input(event: InputEvent) -> void:
 	if not can_interact:
 		return
 	
-	if event.is_action_pressed("plant", false):
+	if event.is_action_pressed("interact", false) and not is_instance_valid(interact_target):
 		if Data.seeds <= 0:
 			return
 		plant()

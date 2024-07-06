@@ -17,13 +17,18 @@ func interact(player: Player) -> void:
 
 func play_music() -> void:
 	%Music.volume_db = -32
-	var tween: Tween = get_tree().create_tween()
-	tween.tween_property(%Music, "volume_db", 0, 0.5)
+	var tween: Tween = get_tree().create_tween().set_parallel(true)
+	tween.tween_property(%Music, "volume_db", 4, 0.5)
+	tween.tween_property(Ref.music, "volume_db", -32, 0.5)
+	tween.tween_property(Ref.nature, "volume_db", -64, 0.5)
 	%Music.playing = true
 
 func stop_music() -> void:
 	%Music.volume_db = 0
-	var tween: Tween = get_tree().create_tween()
+	var tween: Tween = get_tree().create_tween().set_parallel(true)
+	tween.tween_property(%Music, "volume_db", 0, 0.5)
+	tween.tween_property(Ref.music, "volume_db", -8, 0.5)
+	tween.tween_property(Ref.nature, "volume_db", -28, 0.5)
 	tween.tween_property(%Music, "volume_db", -32, 0.5)
 	await tween.finished
 	%Music.playing = false

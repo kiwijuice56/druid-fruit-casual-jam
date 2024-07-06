@@ -13,5 +13,5 @@ var fruits: int:
 		data_changed.emit()
 
 func _ready() -> void:
-	seeds = 3
+	seeds = 2
 	fruits = 0

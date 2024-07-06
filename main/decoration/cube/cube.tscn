@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3 uid="uid://dmwb120i3l42n"]
+
+[ext_resource type="Texture2D" uid="uid://crshbeshntd50" path="res://main/decoration/spike/cube.png" id="1_aal45"]
+[ext_resource type="PackedScene" uid="uid://b84ceqsyuo4b0" path="res://main/asset/shadow/shadow.tscn" id="2_kcyhx"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_mjvdo"]
+size = Vector2(450, 250)
+
+[node name="Cube" type="Sprite2D"]
+modulate = Color(0.60933, 0.60933, 0.60933, 1)
+position = Vector2(65, 169)
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("1_aal45")
+
+[node name="Shadow" parent="." instance=ExtResource("2_kcyhx")]
+position = Vector2(-20, 116.667)
+scale = Vector2(2, 1.5)
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(-3.33333, 70)
+shape = SubResource("RectangleShape2D_mjvdo")
