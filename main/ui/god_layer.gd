@@ -12,12 +12,13 @@ class_name GodLayer extends CanvasLayer
 @export var empty_lines: Array[String]
 @export var empty_clips: Array[AudioStream]
 
-var first_talk: bool = false
-var fruit_target: int = 0
+var first_talk: bool = true
+var fruit_target: int = 30
 
 func talk() -> void:
+	%Text.text = ""
 	visible = true
-	await get_tree().create_timer(2.0).timeout
+	await get_tree().create_timer(4.0).timeout
 	
 	if first_talk:
 		first_talk = false

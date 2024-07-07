@@ -1129,6 +1129,25 @@ position = Vector2(1952, 72)
 scale = Vector2(1, 0.25)
 texture = SubResource("GradientTexture2D_vuglj")
 
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Vignette" type="ColorRect" parent="CanvasLayer"]
+material = SubResource("ShaderMaterial_btgvu")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Flash" type="ColorRect" parent="CanvasLayer"]
+visible = false
+modulate = Color(0, 0, 0, 1)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
 [node name="UILayer" type="CanvasLayer" parent="."]
 
 [node name="BabyFractal" parent="UILayer" instance=ExtResource("7_i71pd")]
@@ -1186,25 +1205,6 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "123456"
 horizontal_alignment = 1
 script = ExtResource("8_1lx0r")
-
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
-
-[node name="Vignette" type="ColorRect" parent="CanvasLayer"]
-material = SubResource("ShaderMaterial_btgvu")
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Flash" type="ColorRect" parent="CanvasLayer"]
-visible = false
-modulate = Color(0, 0, 0, 1)
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
 
 [node name="GodLayer" type="CanvasLayer" parent="."]
 layer = 8

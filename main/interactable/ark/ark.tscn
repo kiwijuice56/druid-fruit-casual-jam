@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://b003dkwqobg8t" path="res://main/interactable/ark/ark.png" id="1_o2dh4"]
 [ext_resource type="Script" path="res://main/interactable/ark/ark.gd" id="1_r2atf"]
 [ext_resource type="Texture2D" uid="uid://2jf1bq4kkic5" path="res://main/asset/light.webp" id="3_oa2jt"]
-[ext_resource type="AudioStream" uid="uid://bg1d42es5pkhd" path="res://main/music/fractal_music.ogg" id="5_c46bv"]
+[ext_resource type="AudioStream" uid="uid://bs1j7cb540ukc" path="res://main/music/heartbeat.ogg" id="5_nackc"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_ieysq"]
 radius = 32.0
@@ -107,6 +107,5 @@ shape = SubResource("RectangleShape2D_yyx04")
 [node name="Music" type="AudioStreamPlayer" parent="."]
 unique_name_in_owner = true
 process_mode = 3
-stream = ExtResource("5_c46bv")
-pitch_scale = 0.8
+stream = ExtResource("5_nackc")
 bus = &"Music"
