@@ -12,6 +12,9 @@ var fruits: int:
 		fruits = val
 		data_changed.emit()
 
+var fed: int
+
 func _ready() -> void:
 	seeds = 2
 	fruits = 0
+	fed = 0

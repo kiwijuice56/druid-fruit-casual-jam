@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://cg6gxxmwtunye"]
+[gd_scene load_steps=37 format=3 uid="uid://cg6gxxmwtunye"]
 
 [ext_resource type="AudioStream" uid="uid://c17c5mp58tb8i" path="res://main/music/fairy_ambiance.ogg" id="1_f5373"]
 [ext_resource type="PackedScene" uid="uid://cp2p4qglkd0yh" path="res://main/fractal/fractal.tscn" id="1_wh10r"]
@@ -24,6 +24,12 @@
 [ext_resource type="Texture2D" uid="uid://flt0rqgle5h2" path="res://main/player/head.png" id="11_d7a8q"]
 [ext_resource type="Script" path="res://main/ui/god_layer.gd" id="12_kiemv"]
 [ext_resource type="FontFile" uid="uid://b1a1pehnsvr2k" path="res://main/ui/graf.ttf" id="13_sak1r"]
+[ext_resource type="AudioStream" uid="uid://c0a1exvvgkyj3" path="res://main/ui/voice_lines/line1.mp3" id="21_wac0u"]
+[ext_resource type="AudioStream" uid="uid://dd67ax8rf278v" path="res://main/ui/voice_lines/line2.mp3" id="22_b17bp"]
+[ext_resource type="AudioStream" uid="uid://buw16o87cwj7u" path="res://main/ui/voice_lines/line3.mp3" id="23_sne3l"]
+[ext_resource type="AudioStream" uid="uid://c6ylkif54ir5y" path="res://main/ui/voice_lines/line4.mp3" id="24_j6qw3"]
+[ext_resource type="AudioStream" uid="uid://cawp4l62afj01" path="res://main/ui/voice_lines/line5.mp3" id="25_42dq5"]
+[ext_resource type="AudioStream" uid="uid://booyanorofanl" path="res://main/ui/voice_lines/i_am_with_you.mp3" id="26_wslnk"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_xjnth"]
 radius = 48.0
@@ -106,12 +112,6 @@ position = Vector2(-372, 635)
 
 [node name="Sapling2" parent="Worldlayer/World/Saplings" instance=ExtResource("5_kkdfu")]
 position = Vector2(-253, 750)
-
-[node name="Sapling4" parent="Worldlayer/World/Saplings" instance=ExtResource("5_kkdfu")]
-position = Vector2(-146, 673)
-
-[node name="Sapling3" parent="Worldlayer/World/Saplings" instance=ExtResource("5_kkdfu")]
-position = Vector2(544, 450)
 
 [node name="Sapling5" parent="Worldlayer/World/Saplings" instance=ExtResource("5_kkdfu")]
 position = Vector2(582, 499)
@@ -798,6 +798,8 @@ script = ExtResource("8_1lx0r")
 layer = 8
 visible = false
 script = ExtResource("12_kiemv")
+initial_lines = Array[String](["meager druid, created from my blood and flesh...", "a new era of eternal harmony is upon us.", "i require sustenance until the millennial kingdom is complete.", "plant your seeds in my soils and nourish me with your fruits.", "bring forth your harvest in exchange for more seeds.", "i am with you."])
+initial_clips = Array[AudioStream]([ExtResource("21_wac0u"), ExtResource("22_b17bp"), ExtResource("23_sne3l"), ExtResource("24_j6qw3"), ExtResource("25_42dq5"), ExtResource("26_wslnk")])
 
 [node name="Fractal" parent="GodLayer" instance=ExtResource("1_wh10r")]
 anchors_preset = 15
@@ -808,8 +810,9 @@ offset_bottom = 0.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="RichTextLabel" type="RichTextLabel" parent="GodLayer"]
-custom_minimum_size = Vector2(0, 48)
+[node name="Text" type="RichTextLabel" parent="GodLayer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 120)
 anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
@@ -818,9 +821,18 @@ offset_top = -48.0
 grow_horizontal = 2
 grow_vertical = 0
 theme = ExtResource("4_h538u")
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_outline_size = 3
 theme_override_fonts/normal_font = SubResource("FontVariation_pe2j6")
 bbcode_enabled = true
-text = "[center][shake]MAN SHALL NOT SEE ME AND LIVE"
+text = "[center][shake]"
+scroll_active = false
+
+[node name="Voice" type="AudioStreamPlayer" parent="GodLayer"]
+unique_name_in_owner = true
+stream = ExtResource("21_wac0u")
+volume_db = -22.0
+bus = &"Voice"
 
 [node name="PaletteLayer" type="CanvasLayer" parent="."]
 layer = 9

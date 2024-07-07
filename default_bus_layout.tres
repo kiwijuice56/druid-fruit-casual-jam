@@ -1,4 +1,4 @@
-[gd_resource type="AudioBusLayout" load_steps=3 format=3 uid="uid://dowkdvbqb342r"]
+[gd_resource type="AudioBusLayout" load_steps=7 format=3 uid="uid://dowkdvbqb342r"]
 
 [sub_resource type="AudioEffectReverb" id="AudioEffectReverb_sopb5"]
 resource_name = "Reverb"
@@ -6,6 +6,34 @@ room_size = 0.15
 
 [sub_resource type="AudioEffectLowPassFilter" id="AudioEffectLowPassFilter_104w7"]
 resource_name = "LowPassFilter"
+
+[sub_resource type="AudioEffectChorus" id="AudioEffectChorus_4d4iq"]
+resource_name = "Chorus"
+voice_count = 3
+voice/1/pan = -1.0
+voice/2/delay_ms = 39.76
+voice/2/depth_ms = 6.85
+voice/2/pan = 1.0
+voice/3/delay_ms = 12.0
+voice/3/rate_hz = 0.5
+voice/3/depth_ms = 20.0
+voice/3/level_db = 0.0
+voice/3/cutoff_hz = 16000.0
+voice/3/pan = 0.0
+
+[sub_resource type="AudioEffectReverb" id="AudioEffectReverb_w8ayw"]
+resource_name = "Reverb"
+room_size = 0.09
+wet = 1.0
+
+[sub_resource type="AudioEffectLowPassFilter" id="AudioEffectLowPassFilter_dwrxd"]
+resource_name = "LowPassFilter"
+
+[sub_resource type="AudioEffectPitchShift" id="AudioEffectPitchShift_ut3ki"]
+resource_name = "PitchShift"
+pitch_scale = 0.6
+oversampling = 8
+fft_size = 2
 
 [resource]
 bus/1/name = &"Sfx"
@@ -24,3 +52,17 @@ bus/2/mute = false
 bus/2/bypass_fx = false
 bus/2/volume_db = -4.08424
 bus/2/send = &"Master"
+bus/3/name = &"Voice"
+bus/3/solo = false
+bus/3/mute = false
+bus/3/bypass_fx = false
+bus/3/volume_db = 0.0
+bus/3/send = &"Master"
+bus/3/effect/0/effect = SubResource("AudioEffectChorus_4d4iq")
+bus/3/effect/0/enabled = true
+bus/3/effect/1/effect = SubResource("AudioEffectReverb_w8ayw")
+bus/3/effect/1/enabled = true
+bus/3/effect/2/effect = SubResource("AudioEffectLowPassFilter_dwrxd")
+bus/3/effect/2/enabled = true
+bus/3/effect/3/effect = SubResource("AudioEffectPitchShift_ut3ki")
+bus/3/effect/3/enabled = true

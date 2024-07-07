@@ -10,8 +10,6 @@ func interact(player: Player) -> void:
 	play_music()
 	await god_layer.talk()
 	stop_music()
-	Data.seeds += ceil(Data.fruits * 1.5)
-	Data.fruits = 0
 	player.frozen = false
 	player.can_interact = true
 
