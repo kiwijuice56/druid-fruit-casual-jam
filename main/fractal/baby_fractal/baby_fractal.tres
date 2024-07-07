@@ -17,6 +17,7 @@ shader_parameter/fractal_color2 = Color(0, 0, 0, 1)
 shader_parameter/color_center_point = Vector3(0, 0.5, -0.5)
 shader_parameter/color_intensity = 0.5
 shader_parameter/rotation_speed = 1.0
+shader_parameter/mirror = false
 shader_parameter/fov = 86.0
 shader_parameter/runaway_threshold = 8.0
 shader_parameter/light_ray = Vector3(0.405, -1.57, -0.625)

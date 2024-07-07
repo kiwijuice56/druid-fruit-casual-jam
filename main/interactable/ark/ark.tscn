@@ -106,6 +106,7 @@ shape = SubResource("RectangleShape2D_yyx04")
 
 [node name="Music" type="AudioStreamPlayer" parent="."]
 unique_name_in_owner = true
+process_mode = 3
 stream = ExtResource("5_c46bv")
-pitch_scale = 1.1
+pitch_scale = 0.8
 bus = &"Music"

@@ -18,6 +18,7 @@ uniform vec3 fractal_color2: source_color;
 uniform vec3 color_center_point = vec3(0.0, 0.5, -0.5);
 uniform float color_intensity = 0.5;
 uniform float rotation_speed = 1.0;
+uniform bool mirror = false;
 
 group_uniforms camera;
 uniform float fov = 95.0; // In degrees
@@ -59,6 +60,10 @@ void rotate(inout vec3 p) {
 // http://blog.hvidtfeldts.net/index.php/2011/09/distance-estimated-3d-fractals-v-the-mandelbulb-different-de-approximations/
 // https://iquilezles.org/articles/ftrapsgeometric/
 float mandelbulb_DE(vec3 p, inout vec3 collision_info) {
+	if (mirror) {
+		p = mod(p, 4.0) - vec3(2.0);
+	}
+	
 	rotate(p);
 	
 	vec3 z = p;
@@ -159,6 +164,7 @@ void fragment() {
 	
 	// Take the pixel position (UV) and convert it into a ray based on the camera's orientation
 	vec3 ray_pos = _cam_pos;
+	
 	float px = (2.0 * UV.x - 1.0) * tan(fov * PI / 360.0) * (_screen_size.x / _screen_size.y);
 	float py = (1.0 - 2.0 * UV.y * tan(fov * PI / 360.0));
 	vec3 ray_dir = vec3(px, py, -1);
@@ -207,8 +213,9 @@ void fragment() {
 		hit_color += vec3(surface_material.specular_alpha) * pow(specular, specular_power);
 		
 		// Ray-traced shadows
-		hit_color *= 0.15 + 0.85 * soft_shadow(ray_pos + normal * collision_threshold * 4.0, -normalize(light_ray), surface_material.shadow_sharpness);
-		
+		if (!mirror) {
+			hit_color *= 0.15 + 0.85 * soft_shadow(ray_pos + normal * collision_threshold * 4.0, -normalize(light_ray), surface_material.shadow_sharpness);
+		}
 		if (i == 0) {
 			pixel_color = hit_color;
 			pixel_depth = length(origin - ray_pos);
