@@ -1,4 +1,4 @@
-[gd_scene load_steps=47 format=3 uid="uid://cg6gxxmwtunye"]
+[gd_scene load_steps=65 format=3 uid="uid://cg6gxxmwtunye"]
 
 [ext_resource type="AudioStream" uid="uid://c17c5mp58tb8i" path="res://main/music/fairy_ambiance.ogg" id="1_f5373"]
 [ext_resource type="PackedScene" uid="uid://cp2p4qglkd0yh" path="res://main/fractal/fractal.tscn" id="1_wh10r"]
@@ -25,6 +25,11 @@
 [ext_resource type="Texture2D" uid="uid://flt0rqgle5h2" path="res://main/player/head.png" id="11_d7a8q"]
 [ext_resource type="Script" path="res://main/ui/god_layer.gd" id="12_kiemv"]
 [ext_resource type="FontFile" uid="uid://b1a1pehnsvr2k" path="res://main/ui/graf.ttf" id="13_sak1r"]
+[ext_resource type="Texture2D" uid="uid://c2qjtx45f4d7h" path="res://main/decoration/candle.png" id="14_cvt2q"]
+[ext_resource type="Shader" path="res://main/asset/fire.gdshader" id="15_p4ca6"]
+[ext_resource type="Texture2D" uid="uid://wksolvld3d6r" path="res://main/decoration/water/water.png" id="16_3gfvl"]
+[ext_resource type="Texture2D" uid="uid://2jf1bq4kkic5" path="res://main/asset/light.webp" id="17_54ryi"]
+[ext_resource type="Script" path="res://main/fractal/fractal_navigation.gd" id="21_4ojub"]
 [ext_resource type="AudioStream" uid="uid://c0a1exvvgkyj3" path="res://main/ui/voice_lines/line1.mp3" id="21_wac0u"]
 [ext_resource type="AudioStream" uid="uid://dd67ax8rf278v" path="res://main/ui/voice_lines/line2.mp3" id="22_b17bp"]
 [ext_resource type="AudioStream" uid="uid://buw16o87cwj7u" path="res://main/ui/voice_lines/line3.mp3" id="23_sne3l"]
@@ -41,6 +46,9 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_xjnth"]
 radius = 48.0
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_623yw"]
+radius = 128.0
+
 [sub_resource type="Gradient" id="Gradient_wue7c"]
 colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 0)
 
@@ -49,6 +57,558 @@ gradient = SubResource("Gradient_wue7c")
 fill_from = Vector2(0.5, 0)
 fill_to = Vector2(0.5, 0.7)
 metadata/_snap_enabled = true
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_eiydx"]
+shader = ExtResource("15_p4ca6")
+shader_parameter/transparent = Color(0, 0, 0, 0)
+shader_parameter/inner = Color(1, 1, 1, 1)
+shader_parameter/outer = Color(0.202723, 0.202723, 0.202723, 1)
+shader_parameter/inner_threshold = 0.4
+shader_parameter/outer_threshold = 0.06
+shader_parameter/soft_edge = 0.36
+shader_parameter/center = Vector2(0.5, 0.8)
+shader_parameter/OCTAVES = 6
+
+[sub_resource type="Animation" id="Animation_xi775"]
+resource_name = "picler"
+length = 0.5
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("PointLight2D:energy")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [1.0, 0.7, 1.2, 1.0, 0.5]
+}
+
+[sub_resource type="Animation" id="Animation_mbtn3"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("PointLight2D:energy")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [1.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ebqpl"]
+_data = {
+"RESET": SubResource("Animation_mbtn3"),
+"picler": SubResource("Animation_xi775")
+}
+
+[sub_resource type="Environment" id="Environment_xhl1n"]
+
+[sub_resource type="Shader" id="Shader_iyvkt"]
+code = "shader_type canvas_item;
+
+// Decrease iteration and bounce counts for better performance
+// Increase collision threshold for lower detail and better performance
+group_uniforms detail;
+uniform int max_iter = 512; // Max iterations a regular collision ray can march
+uniform int max_bounce = 2; // Max times a ray can be reflected
+uniform int light_iter = 64; // Max times a shadow collision ray can march
+uniform float collision_threshold = 1.0e-3; // Min distance a ray can be from a surface for it to collide
+uniform float normal_sample_length = 1.0e-2; // How far along a collided surface to move when sampling for a normal vector
+
+group_uniforms fractal;
+uniform int bulb_iter = 8; // Max iterations of the fractal algorithm
+uniform float bulb_power = 8.0; // Dimension of the fractal
+uniform float bulb_runaway_threshold = 2.0;
+uniform vec3 fractal_color1: source_color;
+uniform vec3 fractal_color2: source_color;
+uniform vec3 color_center_point = vec3(0.0, 0.5, -0.5);
+uniform float color_intensity = 0.5;
+uniform float rotation_speed = 1.0;
+uniform bool mirror = false;
+
+group_uniforms camera;
+uniform float fov = 95.0; // In degrees
+uniform float runaway_threshold = 8.0; // Distance where a ray is considered far enough to stop iteration
+
+group_uniforms light;
+uniform vec3 light_ray = vec3(0.0, -1.0, 0.0);
+
+// Updated by script only
+group_uniforms internal;
+uniform vec3 _cam_pos = vec3(0.0); // Camera position
+uniform mat3 _cam_mat = mat3(0.0); // Camera basis matrix
+uniform vec2 _screen_size;
+
+struct Material {
+	float reflectivity;
+	float roughness;
+	float shadow_sharpness;
+	float specular_alpha;
+	vec3 albedo_color;
+};
+
+
+void rotate(inout vec3 p) {
+	vec3 pt = p;
+	float t = rotation_speed * TIME / 8.0;
+	p.y = cos(t) * p.y + sin(t) * p.z;
+	p.z = -sin(t) * pt.y + cos(t) * pt.z;
+	
+	t *= 1.5;
+	
+	pt = p;
+	p.x = cos(t) * pt.x - sin(t) * pt.z;
+	p.z = sin(t) * pt.x + cos(t) * pt.z;
+}
+
+// Returns distance estimate to fractal
+// `collision_info` parameter is overwritten with color information
+// http://blog.hvidtfeldts.net/index.php/2011/09/distance-estimated-3d-fractals-v-the-mandelbulb-different-de-approximations/
+// https://iquilezles.org/articles/ftrapsgeometric/
+float mandelbulb_DE(vec3 p, inout vec3 collision_info) {
+	if (mirror) {
+		p = mod(p, 4.0) - vec3(2.0);
+	}
+	
+	rotate(p);
+	
+	vec3 offset = vec3(1.0);
+	float scale = 2.0; 
+	for (int i = 0; i < 16; i++) {
+		if(p.x + p.y < 0.0) p.xy = -p.yx; // fold 1
+		if(p.x + p.z < 0.0) p.xz = -p.zx; // fold 2
+		if(p.y + p.z < 0.0) p.zy = -p.yz; // fold 3
+		p = p * scale - offset * (scale - 1.0);
+	}
+	return length(p) * pow(scale, -float(16));
+}
+
+// Returns a vec4 of the color and distance to the closest object as rgba respectively
+// `collision_info` holds extra information about the collision; Only stores
+// distance values for coloring at this point
+float world_DE(vec3 p, inout int collider_id, inout vec3 collision_info) {
+	collider_id = 0; 
+	return  mandelbulb_DE(p, collision_info);
+}
+
+int march(inout vec3 ray_pos, vec3 ray_dir, inout int id, inout vec3 collision_info) {
+	float dist = 10000.0;
+	int iter = 0;
+	for (int i = 0; i < max_iter; i++) {
+		dist = abs(world_DE(ray_pos, id, collision_info));
+		ray_pos += ray_dir * dist;
+		
+		// We can quit marching early if we are extremely far from the fractal
+		if (dist > runaway_threshold) {
+			iter = max_iter;
+			break;
+		}
+		
+		// Once we are close enough to the fractal, we say we collided with it
+		if (dist < collision_threshold)
+			break;
+		iter++;
+	}
+	return iter;
+}
+
+// https://iquilezles.org/articles/rmshadows/
+float soft_shadow(vec3 ray_pos, vec3 ray_dir, float light_sharpness) {
+	float min_shadow = 1.0;
+	float dist_from_surface = 0.0;
+	vec3 _orbit_dist;
+	for(int i = 0; i < light_iter; i++) {
+		int _id;
+		float dist = abs(world_DE(ray_pos, _id, _orbit_dist));
+		if(dist < collision_threshold)
+			return 0.0;
+		if (dist > runaway_threshold * 4.0) {
+			break;
+		}
+		ray_pos += ray_dir * dist;
+		min_shadow = min(min_shadow, light_sharpness * dist/dist_from_surface);
+		dist_from_surface += dist;
+	}
+	return min_shadow;
+}
+
+vec3 get_normal(vec3 ray_pos) {
+	int _id;
+	vec3 _col_info;
+	return normalize(
+		vec3(world_DE(ray_pos + vec3(normal_sample_length, 0.0, 0.0), _id, _col_info) - world_DE(ray_pos - vec3(normal_sample_length, 0.0, 0.0), _id, _col_info),
+			 world_DE(ray_pos + vec3(0.0, normal_sample_length, 0.0), _id, _col_info) - world_DE(ray_pos - vec3(0.0, normal_sample_length, 0.0), _id, _col_info),
+			 world_DE(ray_pos + vec3(0.0, 0.0, normal_sample_length), _id, _col_info) - world_DE(ray_pos - vec3(0.0, 0.0, normal_sample_length), _id, _col_info)));
+}
+
+// https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-generating-camera-rays/generating-camera-rays.html
+void fragment() {
+	// Initialize materials
+	Material fractal = Material(0.07, 0.2, 9.0, 0.5, vec3(0.0));
+	
+	// Take the pixel position (UV) and convert it into a ray based on the camera's orientation
+	vec3 ray_pos = _cam_pos;
+	
+	float px = (2.0 * UV.x - 1.0) * tan(fov * PI / 360.0) * (_screen_size.x / _screen_size.y);
+	float py = (1.0 - 2.0 * UV.y * tan(fov * PI / 360.0));
+	vec3 ray_dir = vec3(px, py, -1);
+	ray_dir = _cam_mat * normalize(ray_dir);
+	
+	COLOR.a = 0.0;
+	// March through scene, bouncing at collisions to create reflections
+	vec3 pixel_color = vec3(0.0);
+	float pixel_depth = runaway_threshold;
+	for (int i = 0; i < max_bounce; i++) {
+		vec3 origin = ray_pos;
+		
+		int collider_id;
+		vec3 collision_info;
+		int iter = march(ray_pos, ray_dir, collider_id, collision_info);
+		
+		// If we iterated up to the maximum amount of times and still haven't collided,
+		// we probably escaped any objects
+		if (iter == max_iter) 
+			break;
+		
+		COLOR.a = 1.0;
+		
+		float x = min(1.0, collision_info.r);
+		fractal.albedo_color = fractal_color1 * x + (1.0 - x) * fractal_color2;
+		
+		Material surface_material = fractal;
+		
+		vec3 normal = get_normal(ray_pos);
+		
+		// Reflect the ray
+		ray_dir = ray_dir - 2.0 * dot(ray_dir, normal) * normal;
+		ray_pos += ray_dir * collision_threshold * 4.0;
+		
+		vec3 hit_color = surface_material.albedo_color;
+		
+		// Ambient occlusion
+		hit_color *= vec3(1.0 - float(iter) / float(max_iter));
+		
+		// Shadows based on the normal vector at this surface
+		hit_color *= 0.5 + 0.5 * pow(max(0.0, dot(normal, -normalize(light_ray))), 1.0/2.4) * 1.055 - 0.055;
+		
+		// Specular highlights
+		float specular = dot(-normalize(light_ray), ray_dir);
+		float specular_power = 8.0;
+		hit_color += vec3(surface_material.specular_alpha) * pow(specular, specular_power);
+		
+		// Ray-traced shadows
+		if (!mirror) {
+			hit_color *= 0.15 + 0.85 * soft_shadow(ray_pos + normal * collision_threshold * 4.0, -normalize(light_ray), surface_material.shadow_sharpness);
+		}
+		if (i == 0) {
+			pixel_color = hit_color;
+			pixel_depth = length(origin - ray_pos);
+		}
+		
+		// Mix reflections
+		pixel_color = mix(pixel_color, hit_color, surface_material.reflectivity);
+	}
+	pixel_color = clamp(pixel_color, 0.0, 1.0);
+	COLOR.rgb = pixel_color;
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_yd3su"]
+shader = SubResource("Shader_iyvkt")
+shader_parameter/max_iter = 64
+shader_parameter/max_bounce = 1
+shader_parameter/light_iter = 64
+shader_parameter/collision_threshold = 0.003
+shader_parameter/normal_sample_length = 0.1
+shader_parameter/bulb_iter = 5
+shader_parameter/bulb_power = 6.0
+shader_parameter/bulb_runaway_threshold = 2.0
+shader_parameter/fractal_color1 = Color(1, 1, 1, 1)
+shader_parameter/fractal_color2 = Color(1, 0.833662, 0.988686, 1)
+shader_parameter/color_center_point = Vector3(0, 0.5, -0.5)
+shader_parameter/color_intensity = 0.5
+shader_parameter/rotation_speed = 1.0
+shader_parameter/mirror = false
+shader_parameter/fov = 100.1
+shader_parameter/runaway_threshold = 8.0
+shader_parameter/light_ray = Vector3(0.405, -1.57, -0.625)
+shader_parameter/_cam_pos = Vector3(0, -0.08, 3.215)
+shader_parameter/_cam_mat = Basis(1, 0, 0, 0, 1, 0, 0, 0, 1)
+shader_parameter/_screen_size = Vector2(128, 128)
+
+[sub_resource type="Animation" id="Animation_p5r8u"]
+length = 0.001
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:material:shader_parameter/bulb_power")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(6, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+
+[sub_resource type="Animation" id="Animation_51qkl"]
+resource_name = "idle"
+loop_mode = 1
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:material:shader_parameter/bulb_power")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(6, -0.25, 0, 0.25, 0, 12, -0.25, 0, 0.25, 0, 6, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 0.5, 1)
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_oobx3"]
+_data = {
+"RESET": SubResource("Animation_p5r8u"),
+"idle": SubResource("Animation_51qkl")
+}
+
+[sub_resource type="Shader" id="Shader_6eu0g"]
+code = "shader_type canvas_item;
+
+// Decrease iteration and bounce counts for better performance
+// Increase collision threshold for lower detail and better performance
+group_uniforms detail;
+uniform int max_iter = 512; // Max iterations a regular collision ray can march
+uniform int max_bounce = 2; // Max times a ray can be reflected
+uniform int light_iter = 64; // Max times a shadow collision ray can march
+uniform float collision_threshold = 1.0e-3; // Min distance a ray can be from a surface for it to collide
+uniform float normal_sample_length = 1.0e-2; // How far along a collided surface to move when sampling for a normal vector
+
+group_uniforms fractal;
+uniform int bulb_iter = 8; // Max iterations of the fractal algorithm
+uniform float bulb_power = 8.0; // Dimension of the fractal
+uniform float bulb_runaway_threshold = 2.0;
+uniform vec3 fractal_color1: source_color;
+uniform vec3 fractal_color2: source_color;
+uniform vec3 color_center_point = vec3(0.0, 0.5, -0.5);
+uniform float color_intensity = 0.5;
+uniform float rotation_speed = 1.0;
+uniform bool mirror = false;
+
+group_uniforms camera;
+uniform float fov = 95.0; // In degrees
+uniform float runaway_threshold = 8.0; // Distance where a ray is considered far enough to stop iteration
+
+group_uniforms light;
+uniform vec3 light_ray = vec3(0.0, -1.0, 0.0);
+
+// Updated by script only
+group_uniforms internal;
+uniform vec3 _cam_pos = vec3(0.0); // Camera position
+uniform mat3 _cam_mat = mat3(0.0); // Camera basis matrix
+uniform vec2 _screen_size;
+
+struct Material {
+	float reflectivity;
+	float roughness;
+	float shadow_sharpness;
+	float specular_alpha;
+	vec3 albedo_color;
+};
+
+
+void rotate(inout vec3 p) {
+	vec3 pt = p;
+	float t = rotation_speed * TIME / 8.0;
+	p.y = cos(t) * p.y + sin(t) * p.z;
+	p.z = -sin(t) * pt.y + cos(t) * pt.z;
+	
+	t *= 1.5;
+	
+	pt = p;
+	p.x = cos(t) * pt.x - sin(t) * pt.z;
+	p.z = sin(t) * pt.x + cos(t) * pt.z;
+}
+
+// Returns distance estimate to fractal
+// `collision_info` parameter is overwritten with color information
+// http://blog.hvidtfeldts.net/index.php/2011/09/distance-estimated-3d-fractals-v-the-mandelbulb-different-de-approximations/
+// https://iquilezles.org/articles/ftrapsgeometric/
+float mandelbulb_DE(vec3 p, inout vec3 collision_info) {
+	rotate(p);
+	
+	p = p * 0.5 + 0.5;
+	vec3 q = abs(p - 0.5) - 0.5;
+	float d1 = max(q.x, max(q.y, q.z)); // distance to the box
+	float d = d1; // current computed distance
+	float scale = 1.0;
+	for (int i = 0; i < 5; i++) {
+		vec3 pa = mod(p * 3.0 * scale, 3.0);
+		scale *= 3.0;
+		q = vec3(0.5) - abs(pa - 1.5);
+		d1 = min(max(q.x, q.z), min(max(q.x, q.y), max(q.y, q.z))) / scale; //distance inside the 3 axis-aligned square tubes
+		d = max(d, d1); //intersection
+	}
+	return d;
+}
+
+// Returns a vec4 of the color and distance to the closest object as rgba respectively
+// `collision_info` holds extra information about the collision; Only stores
+// distance values for coloring at this point
+float world_DE(vec3 p, inout int collider_id, inout vec3 collision_info) {
+	collider_id = 0; 
+	return  mandelbulb_DE(p, collision_info);
+}
+
+int march(inout vec3 ray_pos, vec3 ray_dir, inout int id, inout vec3 collision_info) {
+	float dist = 10000.0;
+	int iter = 0;
+	for (int i = 0; i < max_iter; i++) {
+		dist = abs(world_DE(ray_pos, id, collision_info));
+		ray_pos += ray_dir * dist;
+		
+		// We can quit marching early if we are extremely far from the fractal
+		if (dist > runaway_threshold) {
+			iter = max_iter;
+			break;
+		}
+		
+		// Once we are close enough to the fractal, we say we collided with it
+		if (dist < collision_threshold)
+			break;
+		iter++;
+	}
+	return iter;
+}
+
+// https://iquilezles.org/articles/rmshadows/
+float soft_shadow(vec3 ray_pos, vec3 ray_dir, float light_sharpness) {
+	float min_shadow = 1.0;
+	float dist_from_surface = 0.0;
+	vec3 _orbit_dist;
+	for(int i = 0; i < light_iter; i++) {
+		int _id;
+		float dist = abs(world_DE(ray_pos, _id, _orbit_dist));
+		if(dist < collision_threshold)
+			return 0.0;
+		if (dist > runaway_threshold * 4.0) {
+			break;
+		}
+		ray_pos += ray_dir * dist;
+		min_shadow = min(min_shadow, light_sharpness * dist/dist_from_surface);
+		dist_from_surface += dist;
+	}
+	return min_shadow;
+}
+
+vec3 get_normal(vec3 ray_pos) {
+	int _id;
+	vec3 _col_info;
+	return normalize(
+		vec3(world_DE(ray_pos + vec3(normal_sample_length, 0.0, 0.0), _id, _col_info) - world_DE(ray_pos - vec3(normal_sample_length, 0.0, 0.0), _id, _col_info),
+			 world_DE(ray_pos + vec3(0.0, normal_sample_length, 0.0), _id, _col_info) - world_DE(ray_pos - vec3(0.0, normal_sample_length, 0.0), _id, _col_info),
+			 world_DE(ray_pos + vec3(0.0, 0.0, normal_sample_length), _id, _col_info) - world_DE(ray_pos - vec3(0.0, 0.0, normal_sample_length), _id, _col_info)));
+}
+
+// https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-generating-camera-rays/generating-camera-rays.html
+void fragment() {
+	// Initialize materials
+	Material fractal = Material(0.07, 0.2, 9.0, 0.5, vec3(0.0));
+	
+	// Take the pixel position (UV) and convert it into a ray based on the camera's orientation
+	vec3 ray_pos = _cam_pos;
+	
+	float px = (2.0 * UV.x - 1.0) * tan(fov * PI / 360.0) * (_screen_size.x / _screen_size.y);
+	float py = (1.0 - 2.0 * UV.y * tan(fov * PI / 360.0));
+	vec3 ray_dir = vec3(px, py, -1);
+	ray_dir = _cam_mat * normalize(ray_dir);
+	
+	COLOR.a = 0.0;
+	// March through scene, bouncing at collisions to create reflections
+	vec3 pixel_color = vec3(0.0);
+	float pixel_depth = runaway_threshold;
+	for (int i = 0; i < max_bounce; i++) {
+		vec3 origin = ray_pos;
+		
+		int collider_id;
+		vec3 collision_info;
+		int iter = march(ray_pos, ray_dir, collider_id, collision_info);
+		
+		// If we iterated up to the maximum amount of times and still haven't collided,
+		// we probably escaped any objects
+		if (iter == max_iter) 
+			break;
+		
+		COLOR.a = 1.0;
+		
+		float x = min(1.0, collision_info.r);
+		fractal.albedo_color = fractal_color1 * x + (1.0 - x) * fractal_color2;
+		
+		Material surface_material = fractal;
+		
+		vec3 normal = get_normal(ray_pos);
+		
+		// Reflect the ray
+		ray_dir = ray_dir - 2.0 * dot(ray_dir, normal) * normal;
+		ray_pos += ray_dir * collision_threshold * 4.0;
+		
+		vec3 hit_color = surface_material.albedo_color;
+		
+		// Ambient occlusion
+		hit_color *= vec3(1.0 - float(iter) / float(max_iter));
+		
+		// Shadows based on the normal vector at this surface
+		hit_color *= 0.5 + 0.5 * pow(max(0.0, dot(normal, -normalize(light_ray))), 1.0/2.4) * 1.055 - 0.055;
+		
+		// Specular highlights
+		float specular = dot(-normalize(light_ray), ray_dir);
+		float specular_power = 8.0;
+		hit_color += vec3(surface_material.specular_alpha) * pow(specular, specular_power);
+		
+		// Ray-traced shadows
+		if (!mirror) {
+			hit_color *= 0.15 + 0.85 * soft_shadow(ray_pos + normal * collision_threshold * 4.0, -normalize(light_ray), surface_material.shadow_sharpness);
+		}
+		if (i == 0) {
+			pixel_color = hit_color;
+			pixel_depth = length(origin - ray_pos);
+		}
+		
+		// Mix reflections
+		pixel_color = mix(pixel_color, hit_color, surface_material.reflectivity);
+	}
+	pixel_color = clamp(pixel_color, 0.0, 1.0);
+	COLOR.rgb = pixel_color;
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ywbof"]
+shader = SubResource("Shader_6eu0g")
+shader_parameter/max_iter = 64
+shader_parameter/max_bounce = 1
+shader_parameter/light_iter = 64
+shader_parameter/collision_threshold = 0.003
+shader_parameter/normal_sample_length = 0.1
+shader_parameter/bulb_iter = 5
+shader_parameter/bulb_power = 6.0
+shader_parameter/bulb_runaway_threshold = 2.0
+shader_parameter/fractal_color1 = Color(1, 1, 1, 1)
+shader_parameter/fractal_color2 = Color(1, 0.833662, 0.988686, 1)
+shader_parameter/color_center_point = Vector3(0, 0.5, -0.5)
+shader_parameter/color_intensity = 0.5
+shader_parameter/rotation_speed = 1.0
+shader_parameter/mirror = false
+shader_parameter/fov = 105.865
+shader_parameter/runaway_threshold = 16.0
+shader_parameter/light_ray = Vector3(0.405, -1.57, -0.625)
+shader_parameter/_cam_pos = Vector3(0, 0, 3.555)
+shader_parameter/_cam_mat = Basis(1, 0, 0, 0, 1, 0, 0, 0, 1)
+shader_parameter/_screen_size = Vector2(128, 128)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_btgvu"]
 shader = ExtResource("5_ippqp")
@@ -495,7 +1055,7 @@ god_layer = NodePath("../../../GodLayer")
 
 [node name="Player" parent="Worldlayer/World" instance=ExtResource("6_oshvt")]
 unique_name_in_owner = true
-position = Vector2(155, 160)
+position = Vector2(158, 187)
 
 [node name="CollisionTileMap" type="TileMap" parent="Worldlayer/World"]
 unique_name_in_owner = true
@@ -515,10 +1075,22 @@ position = Vector2(-372, 635)
 position = Vector2(-253, 750)
 
 [node name="Sapling5" parent="Worldlayer/World/Saplings" instance=ExtResource("5_kkdfu")]
-position = Vector2(582, 499)
+position = Vector2(1110, 922.75)
+
+[node name="Sapling9" parent="Worldlayer/World/Saplings" instance=ExtResource("5_kkdfu")]
+position = Vector2(844, 402)
+
+[node name="Sapling7" parent="Worldlayer/World/Saplings" instance=ExtResource("5_kkdfu")]
+position = Vector2(521, 619)
+
+[node name="Sapling10" parent="Worldlayer/World/Saplings" instance=ExtResource("5_kkdfu")]
+position = Vector2(-463, -282)
 
 [node name="Sapling6" parent="Worldlayer/World/Saplings" instance=ExtResource("5_kkdfu")]
-position = Vector2(678, 413)
+position = Vector2(1164, 180)
+
+[node name="Sapling8" parent="Worldlayer/World/Saplings" instance=ExtResource("5_kkdfu")]
+position = Vector2(1052, 70)
 
 [node name="Decoration" type="Node2D" parent="Worldlayer/World"]
 y_sort_enabled = true
@@ -598,6 +1170,27 @@ position = Vector2(1134, -348)
 [node name="Spike36" parent="Worldlayer/World/Decoration" instance=ExtResource("6_0sv2d")]
 position = Vector2(1231, -171)
 
+[node name="Spike38" parent="Worldlayer/World/Decoration" instance=ExtResource("6_0sv2d")]
+position = Vector2(638, -136)
+
+[node name="Spike39" parent="Worldlayer/World/Decoration" instance=ExtResource("6_0sv2d")]
+position = Vector2(711, -42)
+
+[node name="Spike40" parent="Worldlayer/World/Decoration" instance=ExtResource("6_0sv2d")]
+position = Vector2(550, 81)
+
+[node name="Spike41" parent="Worldlayer/World/Decoration" instance=ExtResource("6_0sv2d")]
+position = Vector2(1237, 681)
+
+[node name="Spike42" parent="Worldlayer/World/Decoration" instance=ExtResource("6_0sv2d")]
+position = Vector2(1236, 893)
+
+[node name="Spike43" parent="Worldlayer/World/Decoration" instance=ExtResource("6_0sv2d")]
+position = Vector2(1418, 329)
+
+[node name="Spike44" parent="Worldlayer/World/Decoration" instance=ExtResource("6_0sv2d")]
+position = Vector2(1474, 48)
+
 [node name="Spike16" parent="Worldlayer/World/Decoration" instance=ExtResource("6_0sv2d")]
 position = Vector2(43, -275)
 
@@ -638,8 +1231,9 @@ position = Vector2(-268, -215)
 position = Vector2(-247, 656)
 
 [node name="Sprite2D" type="Sprite2D" parent="Worldlayer/World"]
-position = Vector2(628, 452)
-scale = Vector2(0.5, 0.5)
+self_modulate = Color(0.598525, 0.598525, 0.598525, 1)
+position = Vector2(1156, 875.75)
+scale = Vector2(0.2, 0.2)
 texture = ExtResource("11_d7a8q")
 hframes = 8
 frame = 4
@@ -653,6 +1247,23 @@ position = Vector2(0, 14)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Worldlayer/World/Sprite2D/StaticBody2D"]
 shape = SubResource("CircleShape2D_xjnth")
+
+[node name="Sprite2D2" type="Sprite2D" parent="Worldlayer/World"]
+self_modulate = Color(0.598525, 0.598525, 0.598525, 1)
+position = Vector2(1109, 95)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("14_cvt2q")
+
+[node name="Shadow" parent="Worldlayer/World/Sprite2D2" instance=ExtResource("8_1aew5")]
+position = Vector2(-6.99988, 215.5)
+scale = Vector2(1.2, 1)
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Worldlayer/World/Sprite2D2"]
+position = Vector2(-12.0001, 100.5)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Worldlayer/World/Sprite2D2/StaticBody2D"]
+position = Vector2(0, 20.0001)
+shape = SubResource("CircleShape2D_623yw")
 
 [node name="Water" type="Node2D" parent="Worldlayer/World"]
 y_sort_enabled = true
@@ -1128,6 +1739,97 @@ z_index = 1
 position = Vector2(1952, 72)
 scale = Vector2(1, 0.25)
 texture = SubResource("GradientTexture2D_vuglj")
+
+[node name="Fire" type="Sprite2D" parent="Worldlayer/World"]
+material = SubResource("ShaderMaterial_eiydx")
+position = Vector2(524, 614)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("16_3gfvl")
+
+[node name="PointLight2D" type="PointLight2D" parent="Worldlayer/World/Fire"]
+position = Vector2(2, 16)
+range_layer_min = -8
+range_layer_max = 8
+texture = ExtResource("17_54ryi")
+texture_scale = 0.9
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Worldlayer/World/Fire"]
+libraries = {
+"": SubResource("AnimationLibrary_ebqpl")
+}
+autoplay = "picler"
+speed_scale = 0.5
+
+[node name="BabyFractal" type="SubViewportContainer" parent="Worldlayer/World"]
+z_index = 1
+offset_left = 883.0
+offset_top = 398.0
+offset_right = 1011.0
+offset_bottom = 526.0
+
+[node name="Shadow" parent="Worldlayer/World/BabyFractal" instance=ExtResource("8_1aew5")]
+position = Vector2(65, 130)
+scale = Vector2(0.15, 0.1)
+
+[node name="SubViewport" type="SubViewport" parent="Worldlayer/World/BabyFractal"]
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(128, 128)
+render_target_update_mode = 4
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Worldlayer/World/BabyFractal/SubViewport"]
+environment = SubResource("Environment_xhl1n")
+
+[node name="FractalNavigation" type="ColorRect" parent="Worldlayer/World/BabyFractal/SubViewport" node_paths=PackedStringArray("camera")]
+unique_name_in_owner = true
+material = SubResource("ShaderMaterial_yd3su")
+custom_minimum_size = Vector2(128, 128)
+script = ExtResource("21_4ojub")
+camera = NodePath("Camera3D")
+
+[node name="Camera3D" type="Camera3D" parent="Worldlayer/World/BabyFractal/SubViewport/FractalNavigation"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.08, 3.215)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Worldlayer/World/BabyFractal/SubViewport/FractalNavigation"]
+libraries = {
+"": SubResource("AnimationLibrary_oobx3")
+}
+speed_scale = 0.1
+
+[node name="BabyFractal2" type="SubViewportContainer" parent="Worldlayer/World"]
+z_index = 1
+offset_left = 709.0
+offset_top = 268.0
+offset_right = 837.0
+offset_bottom = 396.0
+
+[node name="Shadow" parent="Worldlayer/World/BabyFractal2" instance=ExtResource("8_1aew5")]
+position = Vector2(63, 113)
+scale = Vector2(0.15, 0.1)
+
+[node name="SubViewport" type="SubViewport" parent="Worldlayer/World/BabyFractal2"]
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(128, 128)
+render_target_update_mode = 4
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Worldlayer/World/BabyFractal2/SubViewport"]
+environment = SubResource("Environment_xhl1n")
+
+[node name="FractalNavigation" type="ColorRect" parent="Worldlayer/World/BabyFractal2/SubViewport" node_paths=PackedStringArray("camera")]
+material = SubResource("ShaderMaterial_ywbof")
+custom_minimum_size = Vector2(128, 128)
+script = ExtResource("21_4ojub")
+camera = NodePath("Camera3D")
+
+[node name="Camera3D" type="Camera3D" parent="Worldlayer/World/BabyFractal2/SubViewport/FractalNavigation"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.555)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Worldlayer/World/BabyFractal2/SubViewport/FractalNavigation"]
+libraries = {
+"": SubResource("AnimationLibrary_oobx3")
+}
+speed_scale = 0.1
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 

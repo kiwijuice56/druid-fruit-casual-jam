@@ -34,7 +34,7 @@ func _physics_process(delta: float) -> void:
 	water_progress -= delta * drying_speed * 1.0 / 64.0 * personality
 	water_progress = clamp(water_progress, 0.0, 1.0)
 	target_modulate = lerp(dry_color, wet_color, water_progress)
-	modulate = lerp(modulate, target_modulate, delta)
+	modulate = lerp(modulate, target_modulate, delta * 2.0)
 	
 	%GrowAnimationPlayer.speed_scale = growing_speed * personality * ((0.25 + 0.75 * water_progress) * 0.01)
 	

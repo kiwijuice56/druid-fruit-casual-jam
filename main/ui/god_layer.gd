@@ -54,7 +54,7 @@ func talk() -> void:
 
 func convo(lines: Array[String], clips: Array[AudioStream]) -> void:
 	for i in range(len(lines)):
-		%Text.text = "[center][shake]" + lines[i].to_upper()
+		%Text.text = "[center][shake]" + lines[i].to_upper().replace(".", "")
 		%Voice.stream = clips[i]
 		%Voice.playing = true
 		await %Voice.finished
